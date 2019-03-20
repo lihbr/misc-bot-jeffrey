@@ -1,1 +1,3 @@
-# misc-cafe-slack
+# Jeffrey
+
+![Jeffrey](jeffrey_small.png)
