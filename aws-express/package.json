@@ -11,7 +11,7 @@
     "accountId": "433671747534"
   },
   "scripts": {
-    "start": "node app.local.js",
+    "start": "nodemon app.local.js",
     "config": "node ./scripts/configure.js",
     "deconfig": "node ./scripts/deconfigure.js",
     "local": "node scripts/local",
@@ -42,6 +42,7 @@
     "compression": "^1.6.2",
     "cors": "^2.8.3",
     "express": "^4.15.2",
+    "nodemon": "^1.18.10",
     "pug": "^2.0.0-rc.1"
   }
 }

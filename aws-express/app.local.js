@@ -1,5 +1,3 @@
-const app = require('./app')
-const port = 3000
+const AppClass = require("./app");
 
-app.listen(port)
-console.log(`listening on http://localhost:${port}`)
+new AppClass().local(3000);
