@@ -20,7 +20,6 @@ const { response } = require("../helpers/response.format");
 exports.index = (req, res) => {
   log.push(req.body);
   return res.json(req.body.challenge);
-  return response.success({ res, msg: "pong!" });
 };
 
 /**

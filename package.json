@@ -2,6 +2,10 @@
   "name": "jeffrey",
   "version": "1.0.0",
   "description": "Jeffrey server API",
+  "engines": {
+    "node": "10.10.0",
+    "yarn": "1.13.0"
+  },
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"

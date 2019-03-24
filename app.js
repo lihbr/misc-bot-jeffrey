@@ -2,6 +2,9 @@
  * Imports
  */
 
+// Env
+require("dotenv").config();
+
 // Node
 const path = require("path");
 
@@ -42,4 +45,4 @@ class AppClass {
   }
 }
 
-new AppClass().start(3000);
+new AppClass().start(process.env.PORT || 3000);
