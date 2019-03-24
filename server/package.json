@@ -1,0 +1,18 @@
+{
+  "name": "jeffrey",
+  "version": "1.0.0",
+  "description": "Jeffrey server API",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "compression": "^1.6.2",
+    "cors": "^2.8.3",
+    "dotenv": "^7.0.0",
+    "express": "^4.15.2",
+    "nodemon": "^1.18.10"
+  }
+}
