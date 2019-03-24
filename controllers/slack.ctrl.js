@@ -18,7 +18,7 @@ const { response } = require("../helpers/response.format");
  * Index
  */
 exports.index = (req, res) => {
-  log.push(req.body);
+  log.push({ headers: req.headers, body: req.body });
   return res.json(req.body.challenge);
 };
 
