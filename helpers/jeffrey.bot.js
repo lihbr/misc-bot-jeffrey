@@ -4,7 +4,7 @@
 const axios = require("axios");
 
 // Inner
-const text = require("./jeffrey.text.json");
+const jeffreyText = require("./jeffrey.text.json");
 
 /**
  * Config
@@ -33,6 +33,8 @@ exports.isCoffee = text => {
 exports.say = async ({ text, event, channel = null, data = {} } = {}) => {
   const trueChannel = channel || event.channel;
 
+  text = jeffreyText[text];
+
   // Format @author occurences
   text = text.replace(/@author/gi, `<@${event.user}>`);
   // Replace occurences of data with their values
@@ -44,7 +46,7 @@ exports.say = async ({ text, event, channel = null, data = {} } = {}) => {
   }
 
   return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
-    text,
+    text: ,
     channel: trueChannel
   });
 };
