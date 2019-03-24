@@ -8,6 +8,8 @@
 // const user = require("../models/user.model");
 
 // Helpers
+const { isFromSlack, isMessage } = require("../helpers/request.checkers");
+const { isCoffee } = require("../helpers/jeffrey.checkers");
 const { response } = require("../helpers/response.format");
 
 /**
@@ -18,15 +20,28 @@ const { response } = require("../helpers/response.format");
  * Index
  */
 exports.index = (req, res) => {
-  log.push({ headers: req.headers, body: req.body });
-  return res.json(req.body.challenge);
-};
+  log = {
+    isFromSlack: isFromSlack(req),
+    isMessage: isMessage(req),
+    isCoffee: isCoffee(req),
+    body: req.body
+  };
+  // If request is from slack
+  if (!isFromSlack(req)) {
+    return response.error({ res, status: 401, msg: "unauthorized" });
+  }
 
-/**
- * Ping
- */
-exports.ping = (req, res) => {
-  return response.success({ res, msg: "pong!" });
+  // If it's a user message
+  if (isMessage(req)) {
+    const event = req.body.event;
+
+    if (isCoffee(event.text)) {
+      response.success({ res, msg: "it's coffee!" });
+    }
+    return response.success({ res });
+  }
+
+  return response.error({ res, status: 400, msg: "bad request" });
 };
 
 /**
@@ -43,4 +58,4 @@ exports.log = (req, res) => {
 /**
  * Ephemeral in-memory data store
  */
-const log = [];
+let log = {};

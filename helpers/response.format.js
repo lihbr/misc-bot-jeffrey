@@ -17,7 +17,7 @@ exports.response = {
     trusted = false
   ) => {
     // Log error if not in production
-    if (process.env.NODE_ENV !== "production") console.log(error);
+    if (process.env.NODE_ENV !== "production" && error) console.log(error);
 
     // Get CouchDB error message & status if they exist
     if (error) {
