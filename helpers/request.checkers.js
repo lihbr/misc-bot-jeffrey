@@ -14,7 +14,6 @@ exports.isFromSlack = req => {
     !req.headers["x-slack-request-timestamp"] ||
     !req.headers["x-slack-signature"]
   ) {
-    console.log("no headers");
     return false;
   }
 
@@ -25,9 +24,8 @@ exports.isFromSlack = req => {
   // If too old
   if (
     process.env.NODE_ENV === "production" &&
-    Date.now() - timestamp * 1000 > 60 * 5
+    Date.now() / 1000 - timestamp > 60 * 5
   ) {
-    console.log("too old");
     return false;
   }
 
@@ -38,9 +36,6 @@ exports.isFromSlack = req => {
   hmac.update(basestring);
 
   const signature = `${ver}=${hmac.digest("hex")}`;
-
-  console.log(signature);
-  console.log(req.headers["x-slack-signature"]);
 
   return signature === req.headers["x-slack-signature"];
 };
