@@ -22,7 +22,7 @@ exports.isCoffee = text => {
  * @param {string} channel - channel id to post to
  * @return {object} - axios response
  */
-exports.say = async text => {
+exports.say = async (text, channel) => {
   return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
     text,
     channel
