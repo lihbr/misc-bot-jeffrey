@@ -9,7 +9,7 @@
 
 // Helpers
 const { isFromSlack, isMessage } = require("../helpers/request.checkers");
-const { isCoffee } = require("../helpers/jeffrey.checkers");
+const jeffrey = require("../helpers/jeffrey.bot");
 const { response } = require("../helpers/response.format");
 
 /**
@@ -23,7 +23,7 @@ exports.index = (req, res) => {
   log = {
     isFromSlack: isFromSlack(req),
     isMessage: isMessage(req),
-    isCoffee: isCoffee(req),
+    isCoffee: jeffrey.isCoffee(req.body.event.text),
     body: req.body
   };
   // If request is from slack
@@ -35,8 +35,8 @@ exports.index = (req, res) => {
   if (isMessage(req)) {
     const event = req.body.event;
 
-    if (isCoffee(event.text)) {
-      response.success({ res, msg: "it's coffee!" });
+    if (jeffrey.isCoffee(event.text)) {
+      jeffrey.say(`Et un café pour <@${event.user}>!`, event.channel);
     }
     return response.success({ res });
   }
