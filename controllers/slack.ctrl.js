@@ -37,10 +37,14 @@ exports.index = (req, res) => {
 
     let coffee;
     if ((coffee = jeffrey.isCoffee(event.text))) {
-      jeffrey.say(
-        `Et ${coffee} café${coffee > 1 ? "s" : ""} pour @author!`,
-        event
-      );
+      jeffrey.say({
+        text: "addCoffee",
+        event,
+        data: {
+          coffee,
+          coffeePlural: coffee > 1 ? "s" : ""
+        }
+      });
     }
     return response.success({ res });
   }
