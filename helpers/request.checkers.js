@@ -4,9 +4,9 @@
 const crypto = require("crypto");
 
 /**
- * Verify that the request comes from Slack
+ * Verify that the request comes from slack
  * @param {object} req - the request object
- * @return {boolean} - true if from Slack
+ * @return {boolean} - true if from slack
  */
 exports.isFromSlack = req => {
   if (

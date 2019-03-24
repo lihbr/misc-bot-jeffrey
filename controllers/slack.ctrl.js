@@ -35,8 +35,12 @@ exports.index = (req, res) => {
   if (isMessage(req)) {
     const event = req.body.event;
 
-    if (jeffrey.isCoffee(event.text)) {
-      jeffrey.say(`Et un café pour <@${event.user}>!`, event.channel);
+    let coffee;
+    if ((coffee = jeffrey.isCoffee(event.text))) {
+      jeffrey.say(
+        `Et ${coffee} café${coffee > 1 ? "s" : ""} pour @author!`,
+        event
+      );
     }
     return response.success({ res });
   }
