@@ -24,7 +24,8 @@ exports.index = (req, res) => {
     isFromSlack: isFromSlack(req),
     isMessage: isMessage(req),
     isCoffee: isCoffee(req),
-    body: req.body
+    body: req.body,
+    env: process.env
   };
   // If request is from slack
   if (!isFromSlack(req)) {
