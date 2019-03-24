@@ -27,7 +27,7 @@ exports.say = async (text, event, channel = null) => {
   const trueChannel = channel || event.channel;
 
   // Format @author occurences
-  text.replace(/@author/gi, `<@${event.user}>`);
+  text = text.replace(/@author/gi, `<@${event.user}>`);
 
   return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
     text,
