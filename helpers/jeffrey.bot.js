@@ -46,7 +46,7 @@ exports.say = async ({ text, event, channel = null, data = {} } = {}) => {
   }
 
   return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
-    text: ,
+    text,
     channel: trueChannel
   });
 };
