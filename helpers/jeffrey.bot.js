@@ -41,7 +41,7 @@ exports.say = async ({ text, event, channel = null, data = {} } = {}) => {
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
       const element = data[key];
-      text = text.replace(new RegExp(`@${key}`, "gi"), element);
+      text = text.replace(new RegExp(`#${key}#`, "gi"), element);
     }
   }
 

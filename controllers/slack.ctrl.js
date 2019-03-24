@@ -42,7 +42,7 @@ exports.index = (req, res) => {
         event,
         data: {
           coffee,
-          coffeePlural: coffee > 1 ? "s" : ""
+          plural: coffee > 1 ? "s" : ""
         }
       });
     }
