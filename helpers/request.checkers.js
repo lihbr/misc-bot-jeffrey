@@ -24,7 +24,7 @@ exports.isFromSlack = req => {
   // If too old
   if (
     process.env.NODE_ENV === "production" &&
-    Date.now() - timestamp > 60 * 5
+    Date.now() - timestamp * 1000 > 60 * 5
   ) {
     return false;
   }
