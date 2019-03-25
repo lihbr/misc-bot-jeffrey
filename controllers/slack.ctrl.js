@@ -26,18 +26,26 @@ exports.index = (req, res) => {
   // Add request to log
   addLog(req);
 
+  // Send back challenge is any
+  if (req.body.challenge) {
+    return res.send(req.body.challenge);
+  }
+
   // If request is from slack
   if (!isFromSlack(req)) {
     return response.error({ res, status: 401, msg: "unauthorized" });
   }
 
+  // Tell slack everything's ok
+  res.sendStatus(200);
+
   // Deal with request duplication
-  const md5Body = md5(JSON.stringify(req.body));
-  if (history.includes(md5Body)) {
-    return response.success({ res, msg: "already processed" });
-  } else {
-    history.push(md5Body);
-  }
+  // const md5Body = md5(JSON.stringify(req.body));
+  // if (history.includes(md5Body)) {
+  //   return;
+  // } else {
+  //   history.push(md5Body);
+  // }
 
   // If it's a user message
   if (isMessage(req)) {
@@ -54,10 +62,7 @@ exports.index = (req, res) => {
         }
       });
     }
-    return response.success({ res });
   }
-
-  return response.error({ res, status: 400, msg: "bad request" });
 };
 
 /**
