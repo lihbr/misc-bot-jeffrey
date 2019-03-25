@@ -2,6 +2,9 @@
  * Imports
  */
 
+// Node
+const md5 = require("md5");
+
 // Inner
 
 // Models
@@ -20,15 +23,20 @@ const { response } = require("../helpers/response.format");
  * Index
  */
 exports.index = (req, res) => {
-  log = {
-    isFromSlack: isFromSlack(req),
-    isMessage: isMessage(req),
-    isCoffee: jeffrey.isCoffee(req.body.event.text),
-    body: req.body
-  };
+  // Add request to log
+  addLog(req);
+
   // If request is from slack
   if (!isFromSlack(req)) {
     return response.error({ res, status: 401, msg: "unauthorized" });
+  }
+
+  // Deal with request duplication
+  const md5Body = md5(JSON.stringify(req.body));
+  if (history.includes(md5Body)) {
+    return response.success({ res, msg: "already processed" });
+  } else {
+    history.push(md5Body);
   }
 
   // If it's a user message
@@ -66,4 +74,14 @@ exports.log = (req, res) => {
 /**
  * Ephemeral in-memory data store
  */
+const addLog = req => {
+  log = {
+    isFromSlack: isFromSlack(req),
+    isMessage: isMessage(req),
+    isCoffee: jeffrey.isCoffee(req.body.event.text),
+    body: req.body
+  };
+};
+
 let log = {};
+let history = [];
