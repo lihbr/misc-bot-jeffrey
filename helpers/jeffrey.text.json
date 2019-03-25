@@ -1,3 +1,6 @@
 {
-  "addCoffee": "Et #coffee# café#plural# pour @author!"
+  "addCoffee": "#coffee# coffee#plural# for @author!",
+  "error": {
+    "addCoffee": "*slirp* Sht! Now there's coffee everywhere...\n(yell at <@UH4T1SX52>, `addCoffee` error)"
+  }
 }

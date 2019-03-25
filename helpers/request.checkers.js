@@ -45,7 +45,16 @@ exports.isFromSlack = req => {
  * @param {object} req - the request object
  * @return {boolean}
  */
-exports.isMessage = req => {
-  if (!req.body || !req.body.event || !req.body.event.type) return false;
-  return req.body.event.type === "message";
+exports.isMessage = (req, strict = false) => {
+  const { body } = req;
+  // If request is empty or from bot, or is not a new message
+  if (
+    !body ||
+    !body.event ||
+    !body.event.type ||
+    (strict && body.event.subtype)
+  ) {
+    return false;
+  }
+  return body.event.type === "message";
 };

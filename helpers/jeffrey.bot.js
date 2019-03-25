@@ -14,27 +14,23 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${
 }`;
 
 /**
- * Verify that the request is for coffee
- * @param {string} text - the message text
- * @return {integer} - number of coffee
+ * Get text from the json
+ * @param {string} key - text key
+ * @param {boolean} error - error message if true
+ * @return {string} - the text from the json
  */
-exports.isCoffee = text => {
-  return (text.match(/:café:|:coffee:/gi) || []).length;
+const getText = (key, error) => {
+  return error ? jeffreyText.error[key] : jeffreyText[key];
 };
 
 /**
- * Make Jeffrey say something
- * @param {string} text - the message text
+ * Format text with variables
  * @param {object} event - slack event object
- * @param {string} channel - channel id to post to
+ * @param {string} text - text from the json
  * @param {object} data - dynamic data to replace
- * @return {object} - axios response
+ * @return {string} - formated text
  */
-exports.say = async ({ text, event, channel = null, data = {} } = {}) => {
-  const trueChannel = channel || event.channel;
-
-  text = jeffreyText[text];
-
+const formatText = (event, text, data) => {
   // Format @author occurences
   text = text.replace(/@author/gi, `<@${event.user}>`);
   // Replace occurences of data with their values
@@ -45,8 +41,50 @@ exports.say = async ({ text, event, channel = null, data = {} } = {}) => {
     }
   }
 
+  return text;
+};
+
+/**
+ * Send message to slack
+ * @param {string} text - the text to send
+ * @param {string} channel - the channel to send
+ * @return {object} - axios response
+ */
+const sendMessage = async (text, channel) => {
   return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
     text,
-    channel: trueChannel
+    channel
   });
+};
+
+/**
+ * Verify that the request is for coffee
+ * @param {string} text - the message text
+ * @return {integer} - number of coffee
+ */
+exports.isCoffee = text => {
+  return (text.match(/:café:|:coffee:/gi) || []).length;
+};
+
+/**
+ * Make Jeffrey say something
+ * @param {object} event - slack event object
+ * @param {string} textKey - the message text key
+ * @param {string} channel - channel id to post to
+ * @param {object} data - dynamic data to replace
+ * @param {boolean} error - send error message if true
+ * @return {object} - axios response
+ */
+exports.say = async ({
+  event,
+  textKey,
+  channel = null,
+  data = {},
+  error = false
+} = {}) => {
+  const trueChannel = channel || event.channel;
+
+  const text = formatText(event, getText(textKey, error), data);
+
+  return await sendMessage(text, trueChannel);
 };

@@ -6,9 +6,10 @@
 const md5 = require("md5");
 
 // Inner
+const db = require("../services/postgre.serv");
 
 // Models
-// const user = require("../models/user.model");
+const coffee = require("../models/coffee.model");
 
 // Helpers
 const { isFromSlack, isMessage } = require("../helpers/request.checkers");
@@ -22,7 +23,7 @@ const { response } = require("../helpers/response.format");
 /**
  * Index
  */
-exports.index = (req, res) => {
+exports.index = async (req, res) => {
   // Add request to log
   addLog(req);
 
@@ -39,28 +40,25 @@ exports.index = (req, res) => {
   // Tell slack everything's ok
   res.sendStatus(200);
 
-  // Deal with request duplication
-  // const md5Body = md5(JSON.stringify(req.body));
-  // if (history.includes(md5Body)) {
-  //   return;
-  // } else {
-  //   history.push(md5Body);
-  // }
-
   // If it's a user message
-  if (isMessage(req)) {
+  if (isMessage(req, true)) {
     const event = req.body.event;
 
-    let coffee;
-    if ((coffee = jeffrey.isCoffee(event.text))) {
-      jeffrey.say({
-        text: "addCoffee",
+    let thisCoffee;
+    if ((thisCoffee = jeffrey.isCoffee(event.text))) {
+      const addCoffee = await coffee.add(event.user, thisCoffee);
+
+      await jeffrey.say({
         event,
+        textKey: "addCoffee",
         data: {
-          coffee,
-          plural: coffee > 1 ? "s" : ""
-        }
+          coffee: thisCoffee,
+          plural: thisCoffee > 1 ? "s" : ""
+        },
+        error: !addCoffee
       });
+
+      await db.end();
     }
   }
 };
@@ -81,9 +79,6 @@ exports.log = (req, res) => {
  */
 const addLog = req => {
   log = {
-    isFromSlack: isFromSlack(req),
-    isMessage: isMessage(req),
-    isCoffee: jeffrey.isCoffee(req.body.event.text),
     body: req.body
   };
 };
