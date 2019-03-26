@@ -48,22 +48,52 @@ const formatText = (event, text, data) => {
  * Send message to slack
  * @param {string} text - the text to send
  * @param {string} channel - the channel to send
+ * @param {object} attachments - eventual attachments
  * @return {object} - axios response
  */
-const sendMessage = async (text, channel) => {
+const sendMessage = async (text, channel, attachments = {}) => {
+  console.log(attachments);
   return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
     text,
-    channel
+    channel,
+    attachments
   });
 };
 
 /**
- * Verify that the request is for coffee
+ * get order from the request if it's an order
  * @param {string} text - the message text
- * @return {integer} - number of coffee
+ * @return {object} - order object
  */
-exports.isCoffee = text => {
-  return (text.match(/:café:|:coffee:/gi) || []).length;
+exports.getOrder = text => {
+  let types = [];
+
+  const coffee = (text.match(/:coffee:/gi) || []).length;
+  coffee && types.push("coffee");
+
+  const chocolate = (text.match(/:chocolate_bar:/gi) || []).length;
+  chocolate && types.push("chocolate");
+
+  const tea = (text.match(/:tea:/gi) || []).length;
+  tea && types.push("tea");
+
+  const order = {
+    isOrder: !!types.length,
+    types,
+    coffee,
+    chocolate,
+    tea,
+    data: {}
+  };
+
+  // Build data
+  for (let i = 0; i < types.length; i++) {
+    order.data[`num_${i + 1}`] = order[types[i]];
+    order.data[`type_${i + 1}`] = types[i];
+    order.data[`plural_${i + 1}`] = order[types[i]] > 1 ? "s" : "";
+  }
+
+  return order;
 };
 
 /**
@@ -72,6 +102,7 @@ exports.isCoffee = text => {
  * @param {string} textKey - the message text key
  * @param {string} channel - channel id to post to
  * @param {object} data - dynamic data to replace
+ * @param {object} attachments - eventual attachments
  * @param {boolean} error - send error message if true
  * @return {object} - axios response
  */
@@ -80,11 +111,12 @@ exports.say = async ({
   textKey,
   channel = null,
   data = {},
+  attachments = {},
   error = false
 } = {}) => {
   const trueChannel = channel || event.channel;
 
   const text = formatText(event, getText(textKey, error), data);
 
-  return await sendMessage(text, trueChannel);
+  return await sendMessage(text, trueChannel, attachments);
 };

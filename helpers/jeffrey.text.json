@@ -1,6 +1,13 @@
 {
-  "addCoffee": "#coffee# coffee#plural# for @author!",
+  "addOrder_1": "#num_1# #type_1##plural_1# for @author!",
+  "addOrder_2": "#num_1# #type_1##plural_1# and #num_2# #type_2##plural_2# for @author!",
+  "addOrder_3": "#num_1# #type_1##plural_1#, #num_2# #type_2##plural_2# and #num_3# #type_3##plural_3# for @author. That's a lot!",
+  "appMention_1": "What can I do for you Sir?",
+  "appMention_2": "Here we roll~",
+  "appMention_3": "Someone said Jeffrey?",
   "error": {
-    "addCoffee": "*slirp* Sht! Now there's coffee everywhere...\n(yell at <@UH4T1SX52>, `addCoffee` error)"
+    "addOrder_1": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <@UH4T1SX52>, `addOrder_1` error)",
+    "addOrder_2": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <@UH4T1SX52>, `addOrder_2` error)",
+    "addOrder_3": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <@UH4T1SX52>, `addOrder_3` error)"
   }
 }

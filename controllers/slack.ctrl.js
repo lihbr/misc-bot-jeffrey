@@ -6,13 +6,16 @@
 const md5 = require("md5");
 
 // Inner
-const db = require("../services/postgre.serv");
 
 // Models
-const coffee = require("../models/coffee.model");
+const order = require("../models/order.model");
 
 // Helpers
-const { isFromSlack, isMessage } = require("../helpers/request.checkers");
+const {
+  isFromSlack,
+  isMessage,
+  isMention
+} = require("../helpers/request.checkers");
 const jeffrey = require("../helpers/jeffrey.bot");
 const { response } = require("../helpers/response.format");
 
@@ -21,9 +24,9 @@ const { response } = require("../helpers/response.format");
  */
 
 /**
- * Index
+ * Verify
  */
-exports.index = async (req, res) => {
+exports.verify = (req, res, next) => {
   // Add request to log
   addLog(req);
 
@@ -44,28 +47,45 @@ exports.index = async (req, res) => {
   const md5Body = md5(JSON.stringify(req.body.event || req.body));
   if (history.includes(md5Body)) {
     return; // Already processed
-  } else {
-    history.push(md5Body);
   }
 
+  history.push(md5Body);
+  next();
+};
+
+/**
+ * Index
+ */
+exports.index = async (req, res) => {
+  const event = req.body.event;
   // If it's a user message
   if (isMessage(req, true)) {
-    const event = req.body.event;
-
-    let thisCoffee;
-    if ((thisCoffee = jeffrey.isCoffee(event.text))) {
-      const addCoffee = await coffee.add(event.user, thisCoffee);
+    const thisOrder = jeffrey.getOrder(event.text);
+    if (thisOrder.isOrder) {
+      const addOrder = await order.add(thisOrder, event.user);
 
       await jeffrey.say({
         event,
-        textKey: "addCoffee",
-        data: {
-          coffee: thisCoffee,
-          plural: thisCoffee > 1 ? "s" : ""
-        },
-        error: !addCoffee
+        textKey: `addOrder_${thisOrder.types.length}`,
+        data: thisOrder.data,
+        error: !addOrder
       });
+
+      const prune = await order.prune();
     }
+  } else if (isMention(req)) {
+    const mentionMsg = Math.floor(Math.random() * 3) + 1;
+    const mentionImg = Math.floor(Math.random() * 3) + 1;
+    await jeffrey.say({
+      event,
+      textKey: `appMention_${mentionMsg}`,
+      attachments: [
+        {
+          fallback: "Jeffrey gif",
+          image_url: `https://raw.githubusercontent.com/edhbr/misc-slack-jeffrey/master/jeffrey${mentionImg}.gif`
+        }
+      ]
+    });
   }
 };
 

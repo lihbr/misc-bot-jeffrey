@@ -58,3 +58,12 @@ exports.isMessage = (req, strict = false) => {
   }
   return body.event.type === "message";
 };
+
+/**
+ * Verify that the resquest is an app mention
+ * @param {object} req - the request object
+ * @return {boolean}
+ */
+exports.isMention = req => {
+  return req.body.event.type === "app_mention";
+};
