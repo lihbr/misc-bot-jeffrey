@@ -40,6 +40,14 @@ exports.index = async (req, res) => {
   // Tell slack everything's ok
   res.sendStatus(200);
 
+  // Deal with request duplication
+  const md5Body = md5(JSON.stringify(req.body.event || req.body));
+  if (history.includes(md5Body)) {
+    return; // Already processed
+  } else {
+    history.push(md5Body);
+  }
+
   // If it's a user message
   if (isMessage(req, true)) {
     const event = req.body.event;
