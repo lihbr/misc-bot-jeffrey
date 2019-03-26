@@ -65,8 +65,6 @@ exports.index = async (req, res) => {
         },
         error: !addCoffee
       });
-
-      await db.end();
     }
   }
 };
