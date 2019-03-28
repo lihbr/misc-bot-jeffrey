@@ -1,5 +1,5 @@
 /**
- * Import
+ * Imports
  */
 
 // Node
@@ -13,8 +13,11 @@ const jeffreyConfig = require("../jeffrey/config.json");
 
 /**
  * Add an order
+ * @param {object} thisOrder - order object from order.getFromMsg()
+ * @param {object} event - event object from slack
+ * @return {boolean} - success if true
  */
-exports.add = async (thisOrder, event) => {
+const add = async (thisOrder, event) => {
   const addOrder = await addToDB(thisOrder, event.user);
 
   await jeffrey.say({
@@ -29,6 +32,8 @@ exports.add = async (thisOrder, event) => {
   });
 
   const pruned = await prune();
+
+  return !addOrder;
 };
 
 /**
@@ -71,7 +76,7 @@ addToDB = async (order, user) => {
  * @param {string} text - the message text
  * @return {object} - order object
  */
-exports.getFromMsg = text => {
+const getFromMsg = text => {
   let types = [];
 
   const coffee = (text.match(/:coffee:/gi) || []).length;
@@ -121,4 +126,12 @@ const prune = async () => {
     console.error(err);
     return false;
   }
+};
+
+/**
+ * Export
+ */
+module.exports = {
+  add,
+  getFromMsg
 };

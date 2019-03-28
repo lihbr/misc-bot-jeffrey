@@ -9,6 +9,7 @@ const md5 = require("md5");
 
 // Models
 const order = require("../models/order.model");
+const mention = require("../models/mention.model");
 
 // Helpers
 const slack = require("../helpers/request.checkers");
@@ -50,7 +51,7 @@ exports.verify = (req, res, next) => {
 /**
  * Handle slack event
  */
-exports.event = async (req, res) => {
+exports.event = (req, res) => {
   // Add request to log
   addLog(req.body);
 
@@ -59,29 +60,10 @@ exports.event = async (req, res) => {
   if (slack.isMessage(req, true)) {
     const thisOrder = order.getFromMsg(event.text);
     if (thisOrder.isOrder) {
-      const addOrder = await order.add(thisOrder, event);
+      order.add(thisOrder, event);
     }
   } else if (slack.isMention(req)) {
-    const mentionMsg = Math.floor(Math.random() * 3) + 1;
-    const mentionImg = Math.floor(Math.random() * 3) + 1;
-    await jeffrey.say({
-      event,
-      blocks: [
-        {
-          textKey: `appMention_${mentionMsg}`
-        },
-        {
-          key: "image",
-          data: {
-            url: `${process.env.API_URL}/assets/jeffrey${mentionImg}_small.gif`,
-            name: "Jeffrey gif"
-          }
-        },
-        {
-          key: "mention_help"
-        }
-      ]
-    });
+    mention.response(event);
   }
 };
 
