@@ -11,13 +11,10 @@ const md5 = require("md5");
 const order = require("../models/order.model");
 
 // Helpers
-const {
-  isFromSlack,
-  isMessage,
-  isMention
-} = require("../helpers/request.checkers");
-const jeffrey = require("../helpers/jeffrey.bot");
+const slack = require("../helpers/request.checkers");
 const { response } = require("../helpers/response.format");
+
+const jeffrey = require("../jeffrey/index");
 
 /**
  * Config
@@ -27,16 +24,13 @@ const { response } = require("../helpers/response.format");
  * Verify
  */
 exports.verify = (req, res, next) => {
-  // Add request to log
-  addLog(req);
-
   // Send back challenge is any
   if (req.body.challenge) {
     return res.send(req.body.challenge);
   }
 
   // If request is from slack
-  if (!isFromSlack(req)) {
+  if (!slack.isFrom(req)) {
     return response.error({ res, status: 401, msg: "unauthorized" });
   }
 
@@ -54,38 +48,65 @@ exports.verify = (req, res, next) => {
 };
 
 /**
- * Index
+ * Handle slack event
  */
-exports.index = async (req, res) => {
+exports.event = async (req, res) => {
+  // Add request to log
+  addLog(req.body);
+
   const event = req.body.event;
-  // If it's a user message
-  if (isMessage(req, true)) {
-    const thisOrder = jeffrey.getOrder(event.text);
+
+  if (slack.isMessage(req, true)) {
+    const thisOrder = order.getFromMsg(event.text);
     if (thisOrder.isOrder) {
-      const addOrder = await order.add(thisOrder, event.user);
-
-      await jeffrey.say({
-        event,
-        textKey: `addOrder_${thisOrder.types.length}`,
-        data: thisOrder.data,
-        error: !addOrder
-      });
-
-      const prune = await order.prune();
+      const addOrder = await order.add(thisOrder, event);
     }
-  } else if (isMention(req)) {
+  } else if (slack.isMention(req)) {
     const mentionMsg = Math.floor(Math.random() * 3) + 1;
     const mentionImg = Math.floor(Math.random() * 3) + 1;
     await jeffrey.say({
       event,
-      textKey: `appMention_${mentionMsg}`,
-      attachments: [
+      blocks: [
         {
-          fallback: "Jeffrey gif",
-          image_url: `${process.env.API_URL}/assets/jeffrey${mentionImg}.gif`
+          textKey: `appMention_${mentionMsg}`
+        },
+        {
+          key: "image",
+          data: {
+            url: `${process.env.API_URL}/assets/jeffrey${mentionImg}_small.gif`,
+            name: "Jeffrey gif"
+          }
+        },
+        {
+          key: "mention_help"
         }
       ]
     });
+  }
+};
+
+/**
+ * Handle slack action
+ */
+exports.action = async (req, res) => {
+  // Parse payload
+  req.body.payload = JSON.parse(req.body.payload);
+
+  // Add request to log
+  addLog(req.body.payload);
+
+  const payload = req.body.payload;
+
+  if (slack.isBlockAction(req)) {
+    const action = jeffrey.getAction(payload);
+    const event = jeffrey.getEvent(payload, action);
+    // Add order case
+    if (action.indexOf("addOrder") === 0) {
+      const thisOrder = order.getFromMsg(event.text);
+      if (thisOrder.isOrder) {
+        const addOrder = await order.add(thisOrder, event);
+      }
+    }
   }
 };
 
@@ -103,10 +124,8 @@ exports.log = (req, res) => {
 /**
  * Ephemeral in-memory data store
  */
-const addLog = req => {
-  log = {
-    body: req.body
-  };
+const addLog = data => {
+  log = data;
 };
 
 let log = {};

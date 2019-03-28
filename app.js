@@ -24,12 +24,19 @@ const mainRouter = require("./routes/main.router");
 // Main
 const app = express();
 
+// Set rowBody correctly
+const rawBodyBuffer = (req, res, buf, encoding) => {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || "utf8");
+  }
+};
+
 class AppClass {
   init() {
     app.use(compression());
     app.use(cors());
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.urlencoded({ verify: rawBodyBuffer, extended: true }));
+    app.use(bodyParser.json({ verify: rawBodyBuffer }));
 
     app.use(express.static(path.join(__dirname, "public")));
 

@@ -16,7 +16,8 @@ const slackRouter = Router();
 
 class SlackRouterClass {
   routes() {
-    slackRouter.post("/", slackController.verify, slackController.index);
+    slackRouter.post("/event", slackController.verify, slackController.event);
+    slackRouter.post("/action", slackController.verify, slackController.action);
     slackRouter.get("/log", slackController.log);
   }
 

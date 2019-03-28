@@ -8,7 +8,7 @@ const crypto = require("crypto");
  * @param {object} req - the request object
  * @return {boolean} - true if from slack
  */
-exports.isFromSlack = req => {
+exports.isFrom = req => {
   if (
     !req ||
     !req.headers["x-slack-request-timestamp"] ||
@@ -19,7 +19,8 @@ exports.isFromSlack = req => {
 
   const ver = "v0";
   const timestamp = req.headers["x-slack-request-timestamp"];
-  const body = JSON.stringify(req.body);
+
+  const body = req.rawBody;
 
   // If too old
   if (
@@ -66,4 +67,13 @@ exports.isMessage = (req, strict = false) => {
  */
 exports.isMention = req => {
   return req.body.event.type === "app_mention";
+};
+
+/**
+ * Verify that the resquest is a block action
+ * @param {object} req - the request object
+ * @return {boolean}
+ */
+exports.isBlockAction = req => {
+  return req.body.payload.type === "block_actions";
 };

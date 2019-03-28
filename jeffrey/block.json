@@ -1,0 +1,56 @@
+{
+  "image": {
+    "type": "image",
+    "image_url": "#url#",
+    "alt_text": "#name#",
+    "__inserts": ["image_url", "alt_text"]
+  },
+  "mention_help": {
+    "type": "actions",
+    "elements": [
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "What's your point? (help) :thinking_face:",
+          "emoji": true
+        },
+        "value": "help"
+      },
+      {
+        "type": "static_select",
+        "placeholder": {
+          "type": "plain_text",
+          "text": "Add me a...",
+          "emoji": true
+        },
+        "options": [
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "A coffee! :coffee:",
+              "emoji": true
+            },
+            "value": "addOrder_:coffee:"
+          },
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "A chocolate! :chocolate_bar:",
+              "emoji": true
+            },
+            "value": "addOrder_:chocolate_bar:"
+          },
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "A tea! :tea:",
+              "emoji": true
+            },
+            "value": "addOrder_:tea:"
+          }
+        ]
+      }
+    ]
+  }
+}
