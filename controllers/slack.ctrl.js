@@ -7,14 +7,11 @@ const md5 = require("md5");
 
 // Inner
 
-// Models
-const order = require("../models/order.model");
-const mention = require("../models/mention.model");
-
 // Helpers
-const slack = require("../helpers/request.checkers");
+const slack = require("../helpers/slack.request");
 const { response } = require("../helpers/response.format");
 
+// Jeffrey
 const jeffrey = require("../jeffrey/index");
 
 /**
@@ -25,7 +22,8 @@ const jeffrey = require("../jeffrey/index");
  * Verify
  */
 exports.verify = (req, res, next) => {
-  // Send back challenge is any
+  addLog(req);
+  // Send back challenge if any
   if (req.body.challenge) {
     return res.send(req.body.challenge);
   }
@@ -49,47 +47,10 @@ exports.verify = (req, res, next) => {
 };
 
 /**
- * Handle slack event
+ * Index
  */
-exports.event = (req, res) => {
-  // Add request to log
-  addLog(req.body);
-
-  const event = req.body.event;
-
-  if (slack.isMessage(req, true)) {
-    const thisOrder = order.getFromMsg(event.text);
-    if (thisOrder.isOrder) {
-      order.add(thisOrder, event);
-    }
-  } else if (slack.isMention(req)) {
-    mention.response(event);
-  }
-};
-
-/**
- * Handle slack action
- */
-exports.action = async (req, res) => {
-  // Parse payload
-  req.body.payload = JSON.parse(req.body.payload);
-
-  // Add request to log
-  addLog(req.body.payload);
-
-  const payload = req.body.payload;
-
-  if (slack.isBlockAction(req)) {
-    const action = jeffrey.getAction(payload);
-    const event = jeffrey.getEvent(payload, action);
-    // Add order case
-    if (action.indexOf("addOrder") === 0) {
-      const thisOrder = order.getFromMsg(event.text);
-      if (thisOrder.isOrder) {
-        const addOrder = await order.add(thisOrder, event);
-      }
-    }
-  }
+exports.toJeffrey = (req, res) => {
+  const result = jeffrey.redirect(req, res);
 };
 
 /**
@@ -106,8 +67,8 @@ exports.log = (req, res) => {
 /**
  * Ephemeral in-memory data store
  */
-const addLog = data => {
-  log = data;
+const addLog = req => {
+  log = req.body;
 };
 
 let log = {};

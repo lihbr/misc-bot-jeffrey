@@ -1,4 +1,5 @@
 {
+  "orderKeys": [":coffee:", ":chocolate_bar:", ":tea:"],
   "values": {
     "coffee": 1,
     "chocolate": 2,

@@ -1,19 +1,17 @@
 /**
  * Import
  */
-
-// Inner
-const jeffrey = require("../jeffrey/index");
+const jeffrey = require("../models/jeffrey.model");
 
 /**
- * Response to mention
- * @param {object} event - slack event object
+ * Config
  */
-const response = async event => {
+exports.mention = async event => {
   const mentionMsg = Math.floor(Math.random() * 3) + 1;
   const mentionImg = Math.floor(Math.random() * 3) + 1;
-  await jeffrey.say({
-    event,
+  const result = await jeffrey.say({
+    channel: event.channel,
+    user: event.user,
     blocks: [
       {
         textKey: `appMention_${mentionMsg}`
@@ -26,13 +24,10 @@ const response = async event => {
         }
       },
       {
-        key: "mention_help"
+        key: "mention_buttons"
       }
     ]
   });
-};
 
-/**
- * Export
- */
-module.exports = { response };
+  return result;
+};

@@ -3,11 +3,10 @@
  */
 // Node
 const axios = require("axios");
-const _ = require("lodash/object");
+const _ = require("lodash");
 
 // Inner
-const jeffreyText = require("./text.json");
-const jeffreyBlock = require("./block.json");
+const options = require("../options");
 
 /**
  * Config
@@ -23,42 +22,44 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${
  * @return {string} - the text from the json
  */
 const getText = (key, error) => {
-  return error ? jeffreyText.error[key] : jeffreyText[key];
+  return error ? options.text.error[key] : options.text[key];
 };
 
 /**
  * Format blocks array
- * @param {object} event - slack event object
  * @param {array} unformatedBlocks - unformated blocks array
+ * @param {string} user - user id
  * @param {boolean} error - error version if true
  * @return {array} - string with data inserted
  */
-const formatBlocks = (event, unformatedBlocks, error) => {
+const formatBlocks = (unformatedBlocks, user, error) => {
   const blocks = [];
 
   for (const unformatedBlock of unformatedBlocks) {
     let block = {};
 
     if (unformatedBlock.textKey) {
+      // Simple text case
       block = {
         type: "section",
         text: {
           type: "mrkdwn",
           text: insertData(
-            event,
             getText(unformatedBlock.textKey, error),
+            user,
             unformatedBlock.data
           )
         }
       };
     } else {
-      block = jeffreyBlock[unformatedBlock.key];
+      // Other cases
+      block = _.clone(options.block[unformatedBlock.key]);
       if (block.__inserts) {
         for (const insert of block.__inserts) {
           _.set(
             block,
             insert,
-            insertData(event, _.get(block, insert), unformatedBlock.data)
+            insertData(_.get(block, insert), user, unformatedBlock.data)
           );
         }
         _.unset(block, "__inserts");
@@ -73,15 +74,15 @@ const formatBlocks = (event, unformatedBlocks, error) => {
 
 /**
  * Insert data into string
- * @param {object} event - slack event object
  * @param {string} string - string where to insert
+ * @param {object} user - user id
  * @param {object} data - data to insert
  * @return {string} - string with data inserted
  */
-const insertData = (event, string, data = {}) => {
+const insertData = (string, user, data = {}) => {
   if (!string) return "";
   // Replace @author occurences
-  string = string.replace(/@author/gi, `<@${event.user}>`);
+  string = string.replace(/@author/gi, `<@${user}>`);
   // Replace occurences of data with their values
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
@@ -95,27 +96,25 @@ const insertData = (event, string, data = {}) => {
 
 /**
  * Make Jeffrey say something
- * @param {object} event - slack event object
- * @param {string} channel - channel id to post to (overwrite)
+ * @param {string} channel - channel id to post to
+ * @param {string} user - user id
  * @param {object} text - the message text key
  * @param {object} blocks - slack blocks message
  * @param {boolean} error - send error message if true
  * @return {object} - axios response
  */
 const say = async ({
-  event,
-  channel = null,
+  channel,
+  user = "",
   text = {},
   blocks = [],
   error = false
 } = {}) => {
-  const trueChannel = channel || event.channel;
+  const formatedText = insertData(getText(text.key, error), user, text.data);
 
-  const formatedText = insertData(event, getText(text.key, error), text.data);
+  const formatedBlocks = formatBlocks(blocks, user, error);
 
-  const formatedBlocks = formatBlocks(event, blocks, error);
-
-  return await sendMessage(trueChannel, formatedText, formatedBlocks);
+  return await sendMessage(channel, formatedText, formatedBlocks);
 };
 
 /**
@@ -136,4 +135,6 @@ const sendMessage = async (channel, text, blocks) => {
 /**
  * Export
  */
-module.exports = say;
+module.exports = {
+  say
+};

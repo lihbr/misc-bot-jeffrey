@@ -5,7 +5,7 @@
     "alt_text": "#name#",
     "__inserts": ["image_url", "alt_text"]
   },
-  "mention_help": {
+  "mention_buttons": {
     "type": "actions",
     "elements": [
       {

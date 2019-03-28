@@ -8,41 +8,16 @@ const format = require("pg-format");
 // Inner
 const db = require("../services/postgre.serv");
 
-const jeffrey = require("../jeffrey/index");
-const jeffreyConfig = require("../jeffrey/config.json");
+const options = require("../options");
 
 /**
  * Add an order
- * @param {object} thisOrder - order object from order.getFromMsg()
- * @param {object} event - event object from slack
- * @return {boolean} - success if true
- */
-const add = async (thisOrder, event) => {
-  const addOrder = await addToDB(thisOrder, event.user);
-
-  await jeffrey.say({
-    event,
-    blocks: [
-      {
-        textKey: `addOrder_${thisOrder.types.length}`,
-        data: thisOrder.data
-      }
-    ],
-    error: !addOrder
-  });
-
-  const pruned = await prune();
-
-  return !addOrder;
-};
-
-/**
- * Add an order to DB
- * @param {object} order - order object from order.getFromMsg()
+ * @param {object} text - user text
  * @param {string} user - order author
- * @return {boolean|object} - false of created rows
+ * @return {object} - order and created rows
  */
-addToDB = async (order, user) => {
+add = async (text, user) => {
+  const order = getFromMsg(text);
   try {
     const values = [];
 
@@ -53,7 +28,7 @@ addToDB = async (order, user) => {
         user,
         type,
         order[type],
-        jeffreyConfig.values[type] * order[type],
+        options.config.values[type] * order[type],
         now
       ]);
     }
@@ -64,10 +39,10 @@ addToDB = async (order, user) => {
         values
       )
     );
-    return rows;
+    return { raw: order, rows };
   } catch (err) {
     console.error(err);
-    return false;
+    return { raw: order, rows: false };
   }
 };
 
@@ -108,30 +83,41 @@ const getFromMsg = text => {
 };
 
 /**
- * Prune orders older than 30 days
+ * Prune orders older than 30 days once a day
  * @return {integer} - number of row deleted
  */
 const prune = async () => {
   try {
     const now = Date.now();
-    const month = 1000 * 60 * 60 * 24 * 30;
-    const monthAgo = now - month;
+    const day = 1000 * 60 * 60 * 24;
+    const month = day * 30;
 
-    const result = await db.query("DELETE FROM orders WHERE time < $1", [
-      monthAgo
-    ]);
+    if (lastPrune < now - day) {
+      const result = await db.query("DELETE FROM orders WHERE time < $1", [
+        now - month
+      ]);
 
-    return result.rowCount;
+      lastPrune = now;
+
+      return result.rowCount;
+    }
+    return 0;
   } catch (err) {
     console.error(err);
-    return false;
+    return 0;
   }
 };
+
+/**
+ * Ephemeral in-memory data store
+ */
+let lastPrune = 0;
 
 /**
  * Export
  */
 module.exports = {
   add,
-  getFromMsg
+  getFromMsg,
+  prune
 };
