@@ -1,6 +1,8 @@
 /**
- * Import
+ * Imports
  */
+
+// Inner
 const jeffrey = require("../models/jeffrey.model");
 const order = require("../models/order.model");
 

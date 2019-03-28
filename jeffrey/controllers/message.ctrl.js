@@ -1,6 +1,8 @@
 /**
  * Import
  */
+
+// Inner
 const jeffrey = require("../models/jeffrey.model");
 
 /**
