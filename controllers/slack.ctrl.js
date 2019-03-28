@@ -82,7 +82,7 @@ exports.index = async (req, res) => {
       attachments: [
         {
           fallback: "Jeffrey gif",
-          image_url: `https://raw.githubusercontent.com/edhbr/misc-slack-jeffrey/master/jeffrey${mentionImg}.gif`
+          image_url: `${process.env.API_URL}/assets/jeffrey${mentionImg}.gif`
         }
       ]
     });
