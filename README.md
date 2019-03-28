@@ -1,3 +1,3 @@
 # Jeffrey
 
-![Jeffrey](jeffrey_small.png)
+![Jeffrey](public/assets/jeffrey_small.png)

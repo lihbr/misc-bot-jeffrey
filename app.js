@@ -31,8 +31,7 @@ class AppClass {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
-    // NOTE: tests can't find the views directory without this
-    app.set("views", path.join(__dirname, "views"));
+    app.use(express.static(path.join(__dirname, "public")));
 
     app.use("/", mainRouter);
   }
