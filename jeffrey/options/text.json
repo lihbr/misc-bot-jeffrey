@@ -1,10 +1,16 @@
 {
+  "test": "1, 2, 1, 2, this is a test!",
   "addOrder_1": "#num_1# #type_1##plural_1# for @author!",
   "addOrder_2": "#num_1# #type_1##plural_1# and #num_2# #type_2##plural_2# for @author!",
   "addOrder_3": "#num_1# #type_1##plural_1#, #num_2# #type_2##plural_2# and #num_3# #type_3##plural_3# for @author. That's a lot!",
   "appMention_1": "What can I do for you Sir?",
   "appMention_2": "Here we roll~",
   "appMention_3": "Someone said Jeffrey?",
+  "checkDM": "I told you everything in DM @author :wink:",
+  "helpIntro": "I'm here to help your team keep track of its coffee and other beverages consumption.\nHere's how I work:",
+  "helpOrder": "*Adding orders*\nYou can add an order by telling any of the following in a channel I'm in.\nThe more you tell, the more I'll add, be aware that :warning: _order value may vary_ :warning:!\n\n#orderTypes#",
+  "helpMention": "*Mention*\nYou can mention me in channel I'm in: `@jeffrey`.\nI'll help you get straight to what you're looking for! :sunglasses:",
+  "helpCommands": "*Commands*\nFor old school boys and gals I still have commands you can use :nerd_face::\n\n- `/jeffreyhelp` give you this\n- `/jeffreybalance` show you you balance\n- `/jeffreystats` show you stats of your team",
   "error": {
     "addOrder_1": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <@UH4T1SX52>, `addOrder_1` error)",
     "addOrder_2": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <@UH4T1SX52>, `addOrder_2` error)",

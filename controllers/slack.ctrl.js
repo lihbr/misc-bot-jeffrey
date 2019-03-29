@@ -34,7 +34,11 @@ exports.verify = (req, res, next) => {
   }
 
   // Tell slack everything's ok
-  res.sendStatus(200);
+  if (req.body.command) {
+    res.status(200).json({ response_type: "ephemeral", text: "Processing..." });
+  } else {
+    res.sendStatus(200);
+  }
 
   // Deal with request duplication
   const md5Body = md5(JSON.stringify(req.body.event || req.body));

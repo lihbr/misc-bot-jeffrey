@@ -23,8 +23,15 @@ class Router {
    */
   route(event) {
     for (const route of this._routes) {
-      if (event.type === route[0] && event.subtype === route[1]) {
-        return route[2](event);
+      if (
+        event.type === route[0] &&
+        (event.subtype === route[1] || route[1] === "*")
+      ) {
+        if (route[3]) {
+          return route[2](event, route[3]);
+        } else {
+          return route[2](event);
+        }
       }
     }
 

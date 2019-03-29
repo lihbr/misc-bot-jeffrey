@@ -25,9 +25,14 @@ const event = body => {
       (body.event.message && body.event.message.user) ||
       (body.event.previous_message && body.event.previous_message.user);
     event.channel = body.event.channel;
-    event.text = body.event.text;
+    event.text =
+      body.event.text ||
+      (body.event.message && body.event.message.text) ||
+      (body.event.previous_message && body.event.previous_message.text);
+    event.ts = body.event.ts;
     event.blocks = [];
     event.actions = [];
+    event.response_url = "";
   } else if (body.payload) {
     // Slack interaction
     const payload = JSON.parse(body.payload);
@@ -39,13 +44,28 @@ const event = body => {
     event.user = payload.user.id;
     event.channel = payload.channel.id;
     event.text = currentActions[0] || "";
+    event.ts = payload.container.message_ts;
     event.blocks = payload.message.blocks;
     event.actions = currentActions;
+    event.response_url = payload.response_url || "";
+  } else if (body.command) {
+    // Slack command
+    event.type = "command";
+    event.subtype = body.command.slice(1);
+    event.user = body.user_id;
+    event.channel = body.channel_id;
+    event.text = body.text;
+    event.ts = "";
+    event.blocks = [];
+    event.actions = [];
+    event.response_url = body.response_url;
   }
 
-  if (!event.subtype) {
+  if (event.type && !event.subtype) {
     if (is.order(event.text)) {
       event.subtype = "addOrder";
+    } else if (event.text) {
+      event.subtype = event.text;
     }
   }
 

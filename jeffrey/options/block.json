@@ -5,6 +5,9 @@
     "alt_text": "#name#",
     "__inserts": ["image_url", "alt_text"]
   },
+  "divider": {
+    "type": "divider"
+  },
   "mention_buttons": {
     "type": "actions",
     "elements": [
@@ -16,6 +19,24 @@
           "emoji": true
         },
         "value": "help"
+      },
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Gimme some stats! :calendar:",
+          "emoji": true
+        },
+        "value": "stats"
+      },
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Check out my balance :scales:",
+          "emoji": true
+        },
+        "value": "balance"
       },
       {
         "type": "static_select",
@@ -50,6 +71,15 @@
             "value": "addOrder_:tea:"
           }
         ]
+      }
+    ]
+  },
+  "info": {
+    "type": "context",
+    "elements": [
+      {
+        "type": "mrkdwn",
+        "text": "ver. 1.0 | developed by <https://edhbr.fr|@edhbr> for <https://synerghetic.net|@synerghetic>"
       }
     ]
   }

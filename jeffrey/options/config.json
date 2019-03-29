@@ -1,8 +1,16 @@
 {
-  "orderKeys": [":coffee:", ":chocolate_bar:", ":tea:"],
-  "values": {
-    "coffee": 1,
-    "chocolate": 2,
-    "tea": 2
+  "orders": {
+    "coffee": {
+      "emoji": ":coffee:",
+      "value": 1
+    },
+    "chocolate": {
+      "emoji": ":chocolate_bar:",
+      "value": 2
+    },
+    "tea": {
+      "emoji": ":tea:",
+      "value": 2
+    }
   }
 }

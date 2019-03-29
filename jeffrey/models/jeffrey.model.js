@@ -3,7 +3,7 @@
  */
 
 // Node
-const axios = require("axios");
+const axios = require("../core/axios");
 const _ = require("lodash");
 
 // Inner
@@ -12,9 +12,6 @@ const options = require("../options");
 /**
  * Config
  */
-axios.defaults.headers.common["Authorization"] = `Bearer ${
-  process.env.SLACK_BOT_OAUTH_TOKEN
-}`;
 
 /**
  * Get text from the json
@@ -81,7 +78,7 @@ const formatBlocks = (unformatedBlocks, user, error) => {
  * @return {string} - string with data inserted
  */
 const insertData = (string, user, data = {}) => {
-  if (!string) return "";
+  if (!string) return "`null`";
   // Replace @author occurences
   string = string.replace(/@author/gi, `<@${user}>`);
   // Replace occurences of data with their values
@@ -97,6 +94,7 @@ const insertData = (string, user, data = {}) => {
 
 /**
  * Make Jeffrey say something
+ * @param {string} url - response url
  * @param {string} channel - channel id to post to
  * @param {string} user - user id
  * @param {object} text - the message text key
@@ -105,6 +103,7 @@ const insertData = (string, user, data = {}) => {
  * @return {object} - axios response
  */
 const say = async ({
+  url = "",
   channel,
   user = "",
   text = {},
@@ -115,27 +114,82 @@ const say = async ({
 
   const formatedBlocks = formatBlocks(blocks, user, error);
 
-  return await sendMessage(channel, formatedText, formatedBlocks);
+  if (channel === "dm") {
+    channel = await getDMChannel(user);
+  }
+
+  if (!channel) return { ok: false };
+
+  return await sendMessage(url, channel, formatedText, formatedBlocks);
 };
 
 /**
  * Send message to slack
+ * @param {string} url - response url
  * @param {string} channel - the channel to send
  * @param {string} text - text to send
  * @param {object} blocks - blocks to send
  * @return {object} - axios response
  */
-const sendMessage = async (channel, text, blocks) => {
-  return await axios.post(`${process.env.SLACK_API}/chat.postMessage`, {
-    channel,
-    text,
-    blocks
-  });
+const sendMessage = async (url = false, channel, text, blocks) => {
+  try {
+    if (!url) url = `${process.env.SLACK_API}/chat.postMessage`;
+
+    const { data } = await axios.post(url, {
+      channel,
+      text,
+      blocks
+    });
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    return { ok: false };
+  }
+};
+
+/**
+ * Get user dm channel
+ * @param {string} user - user id
+ * @return {string|boolean} - channel id or false
+ */
+const getDMChannel = async user => {
+  try {
+    const { data } = await axios.post(`${process.env.SLACK_API}/im.open`, {
+      user,
+      include_locale: true
+    });
+
+    return !data.ok || data.channel.id;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
+/**
+ * Delete a message
+ * @param {string} channel - channel where the message is
+ * @param {string} ts - message ts
+ */
+const del = async (channel, ts) => {
+  try {
+    const { data } = await axios.post(`${process.env.SLACK_API}/chat.delete`, {
+      channel,
+      ts
+    });
+    return data.ok;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 /**
  * Export
  */
 module.exports = {
-  say
+  say,
+  del,
+  getDMChannel
 };

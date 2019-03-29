@@ -13,6 +13,7 @@ exports.add = async event => {
   const { raw, rows } = await order.add(event.text, event.user);
 
   const result = await jeffrey.say({
+    url: event.response_url,
     channel: event.channel,
     user: event.user,
     blocks: [

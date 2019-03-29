@@ -15,9 +15,12 @@ const options = require("../options");
  * @return {boolean} - true if found
  */
 const order = text => {
-  for (const key of options.config.orderKeys) {
-    if (text.includes(key)) {
-      return true;
+  for (const type in options.config.orders) {
+    if (options.config.orders.hasOwnProperty(type)) {
+      const emoji = options.config.orders[type].emoji;
+      if (text.includes(emoji)) {
+        return true;
+      }
     }
   }
   return false;

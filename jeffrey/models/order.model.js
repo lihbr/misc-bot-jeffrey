@@ -28,7 +28,7 @@ add = async (text, user) => {
         user,
         type,
         order[type],
-        options.config.values[type] * order[type],
+        options.config.orders[type].value * order[type],
         now
       ]);
     }
@@ -52,25 +52,24 @@ add = async (text, user) => {
  * @return {object} - order object
  */
 const getFromMsg = text => {
-  let types = [];
+  const types = [];
 
-  const coffee = (text.match(/:coffee:/gi) || []).length;
-  coffee && types.push("coffee");
+  const order = {};
 
-  const chocolate = (text.match(/:chocolate_bar:/gi) || []).length;
-  chocolate && types.push("chocolate");
+  for (const type in options.config.orders) {
+    if (options.config.orders.hasOwnProperty(type)) {
+      const beverage = options.config.orders[type];
+      const amount = (text.match(new RegExp(beverage.emoji, "gi")) || [])
+        .length;
 
-  const tea = (text.match(/:tea:/gi) || []).length;
-  tea && types.push("tea");
+      order[type] = amount;
+      amount && types.push(type);
+    }
+  }
 
-  const order = {
-    isOrder: !!types.length,
-    types,
-    coffee,
-    chocolate,
-    tea,
-    data: {}
-  };
+  order.isOrder = !!types.length;
+  order.types = types;
+  order.data = {};
 
   // Build data
   for (let i = 0; i < types.length; i++) {
