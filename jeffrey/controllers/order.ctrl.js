@@ -2,9 +2,6 @@
  * Imports
  */
 
-// Node
-const _ = require("lodash");
-
 // Inner
 const get = require("../helpers/get");
 const string = require("../helpers/string");
@@ -174,7 +171,7 @@ exports.stats = async (event, data) => {
       get.top({
         users,
         key: "total",
-        intro: "*Overall:*",
+        intro: "*:dancer: Overall:*",
         limit: 5
       })
     ];

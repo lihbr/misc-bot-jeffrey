@@ -130,7 +130,11 @@ const top = ({ users, key, intro = "", outro = "", limit = 5 } = {}) => {
 
   for (let i = 0; i < sorted.length && i < limit; i++) {
     if (sorted[i][key] > 0) {
-      t.push(`${i + 1}. ${sorted[i].name} \`${sorted[i][key]}\``);
+      t.push(
+        `${i + 1}. <https://${process.env.SLACK_WORKSPACE}.slack.com/messages/${
+          sorted[i].uid
+        }|${sorted[i].name}> \`${sorted[i][key]}\``
+      );
     } else if (i === 0) {
       t.push(`No one's drinking ${key} yet~`);
       break;
