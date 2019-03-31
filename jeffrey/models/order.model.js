@@ -11,12 +11,16 @@ const db = require("../services/postgre.serv");
 const options = require("../options");
 
 /**
+ * Config
+ */
+
+/**
  * Add an order
  * @param {object} text - user text
  * @param {string} user - order author
  * @return {object} - order and created rows
  */
-add = async (text, user) => {
+const add = async (text, user) => {
   const order = getFromMsg(text);
   try {
     const values = [];
@@ -47,7 +51,7 @@ add = async (text, user) => {
 };
 
 /**
- * get order from the request if it's an order
+ * Get order from the request if it's an order
  * @param {string} text - the message text
  * @return {object} - order object
  */
@@ -79,6 +83,22 @@ const getFromMsg = text => {
   }
 
   return order;
+};
+
+/**
+ * Get all order
+ * @return {array} - all orders
+ */
+const getAll = async () => {
+  try {
+    const { rows } = await db.query(
+      "SELECT orders.uid, orders.type, SUM(orders.amount) as total, users.name FROM orders INNER JOIN users ON orders .uid = users.uid GROUP BY orders.uid, orders.type, users.name"
+    );
+    return rows;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 };
 
 /**
@@ -118,5 +138,6 @@ let lastPrune = 0;
 module.exports = {
   add,
   getFromMsg,
+  getAll,
   prune
 };

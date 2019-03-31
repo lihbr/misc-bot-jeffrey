@@ -23,9 +23,7 @@ exports.mention = async event => {
     channel: event.channel,
     user: event.user,
     blocks: [
-      {
-        textKey: `appMention_${mentionMsg}`
-      },
+      { textKey: `appMention_${mentionMsg}` },
       {
         key: "image",
         data: {
@@ -33,9 +31,7 @@ exports.mention = async event => {
           name: "Jeffrey gif"
         }
       },
-      {
-        key: "mention_buttons"
-      }
+      { key: "mentionButtons" }
     ]
   });
 
@@ -56,40 +52,34 @@ exports.help = async event => {
     if (options.config.orders.hasOwnProperty(type)) {
       const order = options.config.orders[type];
       orderTypes.push(
-        `- ${order.emoji} \`${order.emoji}\` | value: ${order.value}`
+        `- ${order.emoji} \`${order.emoji}\` | value: *${order.value}*`
       );
     }
   }
 
-  const result = await jeffrey.say({
-    channel,
-    user: event.user,
-    blocks: [
-      { textKey: "helpIntro" },
-      { key: "divider" },
-      {
-        textKey: "helpOrder",
-        data: {
-          orderTypes: orderTypes.join("\n")
-        }
-      },
-      { key: "divider" },
-      { textKey: "helpMention" },
-      { key: "divider" },
-      { textKey: "helpCommands" },
-      { key: "divider" },
-      { key: "info" }
-    ]
-  });
-
-  if (channel !== event.channel) {
-    const callback = await jeffrey.say({
-      url: event.response_url,
-      channel: event.channel,
+  const [result, callback] = await Promise.all([
+    jeffrey.say({
+      channel,
       user: event.user,
-      blocks: [{ textKey: "checkDM" }]
-    });
-  }
+      blocks: [
+        { textKey: "helpIntro" },
+        { key: "divider" },
+        {
+          textKey: "helpOrder",
+          data: {
+            orderTypes: orderTypes.join("\n")
+          }
+        },
+        { key: "divider" },
+        { textKey: "helpMention" },
+        { key: "divider" },
+        { textKey: "helpCommands" },
+        { key: "divider" },
+        { key: "info" }
+      ]
+    }),
+    jeffrey.checkDM(event, channel)
+  ]);
 
   return result;
 };

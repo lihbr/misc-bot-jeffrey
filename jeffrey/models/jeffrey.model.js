@@ -7,6 +7,8 @@ const axios = require("../core/axios");
 const _ = require("lodash");
 
 // Inner
+const string = require("../helpers/string");
+
 const options = require("../options");
 
 /**
@@ -36,7 +38,10 @@ const formatBlocks = (unformatedBlocks, user, error) => {
   for (const unformatedBlock of unformatedBlocks) {
     let block = {};
 
-    if (unformatedBlock.textKey) {
+    if (unformatedBlock.type) {
+      // Already formed block
+      block = unformatedBlock;
+    } else if (unformatedBlock.textKey) {
       // Simple text case
       block = {
         type: "section",
@@ -51,7 +56,7 @@ const formatBlocks = (unformatedBlocks, user, error) => {
       };
     } else {
       // Other cases
-      block = _.clone(options.block[unformatedBlock.key]);
+      block = _.cloneDeep(options.block[unformatedBlock.key]);
       if (block.__inserts) {
         for (const insert of block.__inserts) {
           _.set(
@@ -110,7 +115,9 @@ const say = async ({
   blocks = [],
   error = false
 } = {}) => {
-  const formatedText = insertData(getText(text.key, error), user, text.data);
+  const formatedText = blocks.length
+    ? options.text.notification
+    : insertData(getText(text.key, error), user, text.data);
 
   const formatedBlocks = formatBlocks(blocks, user, error);
 
@@ -160,7 +167,43 @@ const getDMChannel = async user => {
       include_locale: true
     });
 
-    return !data.ok || data.channel.id;
+    return data.ok ? data.channel.id : false;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
+/**
+ * Get user slack profile
+ * @param {string} user - user id
+ * @return {string|boolean} - user profile or false
+ */
+const getUser = async user => {
+  try {
+    console.log(user);
+    const { data } = await axios.post(
+      `${process.env.SLACK_API}/users.profile.get`,
+      `user=${user}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${process.env.SLACK_OAUTH_TOKEN}`
+        }
+      }
+    );
+
+    console.log(data);
+
+    if (!data.ok) return false;
+
+    const name = data.profile.display_name_normalized
+      ? data.profile.display_name_normalized
+      : data.profile.real_name_normalized;
+
+    const phone = string.normalizePhone(data.profile.phone);
+
+    return { name, phone };
   } catch (err) {
     console.error(err);
     return false;
@@ -186,10 +229,30 @@ const del = async (channel, ts) => {
 };
 
 /**
+ * Tell if necessary a user to check his dms
+ * @param {object} event - event object
+ * @param {string} channel - channel id to check if different from event channel
+ * @return {boolean} - true if everything went fine
+ */
+const checkDM = async (event, channel) => {
+  if (event.channel !== channel) {
+    return !!(await say({
+      url: event.response_url,
+      channel: event.channel,
+      user: event.user,
+      blocks: [{ textKey: "checkDM" }]
+    }));
+  }
+  return true;
+};
+
+/**
  * Export
  */
 module.exports = {
   say,
   del,
-  getDMChannel
+  getDMChannel,
+  getUser,
+  checkDM
 };

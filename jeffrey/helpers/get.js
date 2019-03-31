@@ -5,6 +5,8 @@
 // Inner
 const is = require("../helpers/is");
 
+const options = require("../options");
+
 /**
  * Config
  */
@@ -92,9 +94,60 @@ const actions = payload => {
 };
 
 /**
+ * Get detail from an order object
+ * @param {object} obj - order object
+ * @return {string} - detailed string
+ */
+const detail = obj => {
+  const d = [];
+
+  for (const key in options.config.orders) {
+    if (options.config.orders.hasOwnProperty(key)) {
+      const el = obj[key];
+      d.push(
+        `- ${options.config.orders[key].emoji} ${key}${
+          el > 1 ? "s" : ""
+        } \`${el}\``
+      );
+    }
+  }
+
+  return d.join("\n");
+};
+
+/**
+ * Get a top field for given key from users order array
+ * @param {array} users - users order array
+ * @param {string} key - key to top from
+ * @param {string} intro - intro text
+ * @param {string} outro - outro text
+ * @param {integer} limit - top limit
+ * @return {object} - field
+ */
+const top = ({ users, key, intro = "", outro = "", limit = 5 } = {}) => {
+  const sorted = users.sort((a, b) => a[key] < b[key]);
+  const t = intro ? [intro] : [];
+
+  for (let i = 0; i < sorted.length && i < limit; i++) {
+    if (sorted[i][key] > 0) {
+      t.push(`${i + 1}. ${sorted[i].name} \`${sorted[i][key]}\``);
+    } else if (i === 0) {
+      t.push(`No one's drinking ${key} yet~`);
+      break;
+    }
+  }
+
+  outro && t.push(outro);
+
+  return { type: "mrkdwn", text: t.join("\n") };
+};
+
+/**
  * Export
  */
 module.exports = {
   event,
-  actions
+  actions,
+  detail,
+  top
 };

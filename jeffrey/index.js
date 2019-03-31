@@ -20,6 +20,11 @@ const get = require("./helpers/get");
 const redirect = (req, res) => {
   const event = get.event(req.body);
 
+  console.log("");
+  console.log("");
+  console.log("NEW REQUEST");
+  console.log("");
+  console.log("");
   console.log(event);
 
   const mainRouter = new MainRouterClass();

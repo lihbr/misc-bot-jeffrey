@@ -11,9 +11,10 @@ class Router {
    * @param {string} type - primary type (strict)
    * @param {string} subtype - secondary type (non strict, start with)
    * @param {function} callback - route callback
+   * @param {any} data - data to pass to route
    */
-  use(type, subtype, callback) {
-    this._routes.push([type, subtype, callback]);
+  use(type, subtype, callback, data = null) {
+    this._routes.push([type, subtype, callback, data]);
   }
 
   /**

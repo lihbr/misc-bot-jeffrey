@@ -8,7 +8,7 @@
   "divider": {
     "type": "divider"
   },
-  "mention_buttons": {
+  "mentionButtons": {
     "type": "actions",
     "elements": [
       {
@@ -74,12 +74,26 @@
       }
     ]
   },
+  "statsDetails": {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*Team Consumption*\n*#g_total#* beverages drank during the last month, including:\n#g_detail#\n"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*@author Consumption*\n*#u_total#* beverages drank during the last month, including:\n#u_detail#\n"
+      }
+    ],
+    "__inserts": ["fields[0].text", "fields[1].text"]
+  },
   "info": {
     "type": "context",
     "elements": [
       {
         "type": "mrkdwn",
-        "text": "ver. 1.0 | developed by <https://edhbr.fr|@edhbr> for <https://synerghetic.net|@synerghetic>"
+        "text": "ver. 1.0 | developed by <https://twitter.com/ed_hbr|@edhbr> for <https://twitter.com/synerghetic|@synerghetic>"
       }
     ]
   }
