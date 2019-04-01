@@ -14,12 +14,14 @@
   "helpCommands": "*Commands*\nFor old school boys and gals I still have commands you can use :nerd_face::\n\n- `/jeffreyhelp` give you this\n- `/jeffreystats` show you stats of your team\n- `/jeffreybalance` show you your balance\n- `/jeffreyrefill <amount>` refill your balance\n- `/jeffreyupdate` force the update of your profile",
   "statsIntro": "Here's your team's report about coffee, tea and everything. Enjoy!",
   "statsMonthTop": "*This month top drinkers*",
+  "balanceOk": "Everything's fine, your balance is at *#balance#*, enough for quite some coffees or whatever floats your boat... :sailboat:",
   "warnBalanceNull": ":warning: Your balance is at *#balance#*! You can still order drinks and it'll keep decreasing but you'd better refill it first with: `/jeffreyrefill` :warning:",
   "warnBalanceLow": "Your balance is at *#balance#*, good enough for last #balance# coffee#plural# but please mind refilling your account's balance with: `/jeffreyrefill` :wink:",
   "error": {
     "addOrder_1": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_1` error)",
     "addOrder_2": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_2` error)",
     "addOrder_3": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_3` error)",
-    "statsIntro": "Ouch... I lost the receipts! :anguished:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `stats` error)"
+    "statsIntro": "Ouch... I lost the receipts! :anguished:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `stats` error)",
+    "balanceOk": "Never been good at maths... :disappointed_relieved:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `balanceOk` error)"
   }
 }

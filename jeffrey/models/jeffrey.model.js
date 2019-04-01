@@ -181,7 +181,6 @@ const getDMChannel = async user => {
  */
 const getUser = async user => {
   try {
-    console.log(user);
     const { data } = await axios.post(
       `${process.env.SLACK_API}/users.profile.get`,
       `user=${user}`,
@@ -192,8 +191,6 @@ const getUser = async user => {
         }
       }
     );
-
-    console.log(data);
 
     if (!data.ok) return false;
 

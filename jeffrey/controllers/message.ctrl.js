@@ -4,6 +4,7 @@
 
 // Inner
 const jeffrey = require("../models/jeffrey.model");
+const user = require("../models/user.model");
 
 const options = require("../options");
 
@@ -77,6 +78,48 @@ exports.help = async event => {
         { key: "divider" },
         { key: "info" }
       ]
+    }),
+    jeffrey.checkDM(event, channel)
+  ]);
+
+  return result;
+};
+
+/**
+ * Balance answer
+ * @param {object} event - event object
+ * @return {object} - axios response
+ */
+exports.balance = async event => {
+  const [author, channel] = await Promise.all([
+    user.get(event.user),
+    jeffrey.getDMChannel(event.user)
+  ]);
+
+  let textKey = "balanceOk";
+  const data = {
+    balance: author.balance || 0,
+    plural: author.balance && author.balance > 1 ? "s" : ""
+  };
+
+  if (author.balance) {
+    if (author.balance <= 0) {
+      textKey = "warnBalanceNull";
+    } else if (author.balance <= options.config.balance.warnArt) {
+      textKey = "warnBalanceLow";
+    }
+  }
+
+  console.log("___");
+  console.log(author);
+  console.log("___");
+
+  const [result, callback] = await Promise.all([
+    jeffrey.say({
+      channel,
+      user: event.user,
+      blocks: [{ textKey, data }],
+      error: !author.balance
     }),
     jeffrey.checkDM(event, channel)
   ]);

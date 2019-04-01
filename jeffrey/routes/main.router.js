@@ -24,11 +24,13 @@ class MainRouterClass extends Router {
     this.use("app_mention", "*", messageController.mention);
 
     this.use("block_actions", "help", messageController.help);
-    this.use("block_actions", "addOrder", orderController.add);
     this.use("block_actions", "stats", orderController.stats);
+    this.use("block_actions", "balance", messageController.balance);
+    this.use("block_actions", "addOrder", orderController.add);
 
     this.use("command", "jeffreyhelp", messageController.help);
     this.use("command", "jeffreystats", orderController.stats, "dm");
+    this.use("command", "jeffreybalance", messageController.balance);
   }
 }
 

@@ -25,7 +25,6 @@ const create = async (user, name = "", phone = "") => {
       "INSERT INTO users (uid, balance, creation, name, phone) VALUES ($1, $2, $3, $4, $5) RETURNING uid, balance, total, creation, name, phone",
       [user, options.config.default.user.balance, now, name, phone]
     );
-    console.log(name, phone);
 
     return rows[0];
   } catch (err) {
