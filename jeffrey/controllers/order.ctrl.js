@@ -111,7 +111,7 @@ exports.stats = async (event, data) => {
 
   const blocks = [{ textKey: "statsIntro" }];
 
-  const success = orders.length && author.length && users.length;
+  const success = channel && !!orders && !!author && !!users;
 
   if (success) {
     blocks.push({ key: "divider" });
@@ -150,6 +150,8 @@ exports.stats = async (event, data) => {
       uid: i.uid
     }));
 
+    const theUser = usersOrders.find(i => i.uid === event.user) || { total: 0 };
+
     block.data = {
       g_total: orders.total,
       g_detail: get.detail(orders),
@@ -157,8 +159,8 @@ exports.stats = async (event, data) => {
       g_detail_overall: get.detail(global),
       u_total: author.total,
       u_detail: get.detail(author),
-      u_total_overall: usersOrders.find(i => i.uid === event.user).total,
-      u_detail_overall: get.detail(usersOrders.find(i => i.uid === event.user))
+      u_total_overall: theUser.total,
+      u_detail_overall: get.detail(theUser)
     };
 
     blocks.push(block);

@@ -155,9 +155,12 @@ const top = ({ users, key, intro = "", outro = "", limit = 5 } = {}) => {
         }|${sorted[i].name}> \`${sorted[i][key]}\``
       );
     } else if (i === 0) {
-      t.push(`No one's drinking ${key} yet~`);
       break;
     }
+  }
+
+  if ((intro && t.length === 1) || !t.length) {
+    t.push(`No one's drinking ${key} yet~`);
   }
 
   outro && t.push(outro);
