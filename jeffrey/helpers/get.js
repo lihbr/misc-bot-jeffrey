@@ -94,6 +94,25 @@ const actions = payload => {
 };
 
 /**
+ * Transform an orders array into object
+ * @param {array} array - an orders array
+ * @return {object} - an orders object
+ */
+const ordersObject = array => {
+  const obj = { total: 0 };
+
+  for (const key in options.config.orders) {
+    if (options.config.orders.hasOwnProperty(key)) {
+      const item = array.find(i => i.type === key);
+      obj[key] = item ? parseInt(item.total) : 0;
+      obj.total += item ? parseInt(item.total) : 0;
+    }
+  }
+
+  return obj;
+};
+
+/**
  * Get detail from an order object
  * @param {object} obj - order object
  * @return {string} - detailed string
@@ -103,7 +122,7 @@ const detail = obj => {
 
   for (const key in options.config.orders) {
     if (options.config.orders.hasOwnProperty(key)) {
-      const el = obj[key];
+      const el = obj[key] || 0;
       d.push(
         `- ${options.config.orders[key].emoji} ${key}${
           el > 1 ? "s" : ""
@@ -152,6 +171,7 @@ const top = ({ users, key, intro = "", outro = "", limit = 5 } = {}) => {
 module.exports = {
   event,
   actions,
+  ordersObject,
   detail,
   top
 };

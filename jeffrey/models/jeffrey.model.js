@@ -5,6 +5,7 @@
 // Node
 const axios = require("../core/axios");
 const _ = require("lodash");
+const qs = require("qs");
 
 // Inner
 const string = require("../helpers/string");
@@ -183,7 +184,7 @@ const getUser = async user => {
   try {
     const { data } = await axios.post(
       `${process.env.SLACK_API}/users.profile.get`,
-      `user=${user}`,
+      qs.stringify({ user }),
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

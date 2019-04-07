@@ -92,7 +92,25 @@ const getFromMsg = text => {
 const getAll = async () => {
   try {
     const { rows } = await db.query(
-      "SELECT orders.uid, orders.type, SUM(orders.amount) as total, users.name FROM orders INNER JOIN users ON orders .uid = users.uid GROUP BY orders.uid, orders.type, users.name"
+      "SELECT type, SUM(amount) as total FROM orders GROUP BY type"
+    );
+    return rows;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+};
+
+/**
+ * Get all order
+ * @param {string} user - user id
+ * @return {array} - all orders
+ */
+const getAllFromUser = async user => {
+  try {
+    const { rows } = await db.query(
+      "SELECT type, SUM(amount) as total FROM orders WHERE uid = $1 GROUP BY type",
+      [user]
     );
     return rows;
   } catch (err) {
@@ -139,5 +157,6 @@ module.exports = {
   add,
   getFromMsg,
   getAll,
+  getAllFromUser,
   prune
 };

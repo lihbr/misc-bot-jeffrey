@@ -79,11 +79,11 @@
     "fields": [
       {
         "type": "mrkdwn",
-        "text": "*Team Consumption*\n*#g_total#* beverages drank during the last month, including:\n#g_detail#\n"
+        "text": "*Team Consumption*\n*#g_total#* beverages drank during the last month, including:\n#g_detail#\n\nOverall your team drank *#g_total_overall#* beverages, including:\n#g_detail_overall#"
       },
       {
         "type": "mrkdwn",
-        "text": "*@author Consumption*\n*#u_total#* beverages drank during the last month, including:\n#u_detail#\n"
+        "text": "*@author Consumption*\n*#u_total#* beverages drank during the last month, including:\n#u_detail#\n\nOverall you drank *#u_total_overall#* beverages, including:\n#u_detail_overall#"
       }
     ],
     "__inserts": ["fields[0].text", "fields[1].text"]
@@ -94,6 +94,57 @@
       {
         "type": "mrkdwn",
         "text": "ver. 1.0 | developed by <https://twitter.com/ed_hbr|@edhbr> for <https://twitter.com/synerghetic|@synerghetic>"
+      }
+    ]
+  },
+  "refillAnyway": {
+    "type": "actions",
+    "elements": [
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Refill anyway :moneybag:",
+          "emoji": true
+        },
+        "value": "refill"
+      }
+    ]
+  },
+  "refillNow": {
+    "type": "actions",
+    "elements": [
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Refill now :money_with_wings:",
+          "emoji": true
+        },
+        "value": "refill"
+      }
+    ]
+  },
+  "refillInfo": {
+    "type": "context",
+    "elements": [
+      {
+        "type": "mrkdwn",
+        "text": "If the above phone number isn't correct please update it in your Slack profile and try again with `/jeffreyrefill`"
+      }
+    ]
+  },
+  "refillTryAgain": {
+    "type": "actions",
+    "elements": [
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Try refilling again :money_with_wings:",
+          "emoji": true
+        },
+        "value": "refill"
       }
     ]
   }

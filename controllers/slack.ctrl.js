@@ -58,6 +58,13 @@ exports.toJeffrey = (req, res) => {
 };
 
 /**
+ * Payment
+ */
+exports.payment = (req, res) => {
+  const result = jeffrey.payment(req, res);
+};
+
+/**
  * Log
  */
 exports.log = (req, res) => {

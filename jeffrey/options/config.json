@@ -10,12 +10,16 @@
     },
     "tea": {
       "emoji": ":tea:",
-      "value": 2
+      "value": 1
     }
   },
   "default": {
     "user": {
       "balance": 16
+    },
+    "refill": {
+      "amount": 16,
+      "value": 0.3
     }
   },
   "balance": {

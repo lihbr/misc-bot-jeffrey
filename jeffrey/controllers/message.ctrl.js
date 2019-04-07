@@ -86,42 +86,19 @@ exports.help = async event => {
 };
 
 /**
- * Balance answer
- * @param {object} event - event object
- * @return {object} - axios response
+ * Update answer
  */
-exports.balance = async event => {
-  const [author, channel] = await Promise.all([
-    user.get(event.user),
-    jeffrey.getDMChannel(event.user)
-  ]);
-
-  let textKey = "balanceOk";
-  const data = {
-    balance: author.balance || 0,
-    plural: author.balance && author.balance > 1 ? "s" : ""
-  };
-
-  if (author.balance) {
-    if (author.balance <= 0) {
-      textKey = "warnBalanceNull";
-    } else if (author.balance <= options.config.balance.warnArt) {
-      textKey = "warnBalanceLow";
-    }
-  }
-
-  console.log("___");
-  console.log(author);
-  console.log("___");
+exports.updateUser = async event => {
+  const author = await user.getUpdated(event.user);
 
   const [result, callback] = await Promise.all([
     jeffrey.say({
-      channel,
+      channel: event.channel,
+      url: event.response_url,
       user: event.user,
-      blocks: [{ textKey, data }],
-      error: !author.balance
-    }),
-    jeffrey.checkDM(event, channel)
+      blocks: [{ textKey: "updateUser" }],
+      error: !author
+    })
   ]);
 
   return result;

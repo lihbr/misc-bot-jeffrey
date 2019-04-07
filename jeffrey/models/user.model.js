@@ -5,6 +5,8 @@
 // Inner
 const db = require("../services/postgre.serv");
 
+const jeffrey = require("../models/jeffrey.model");
+
 const options = require("../options");
 
 /**
@@ -26,7 +28,7 @@ const create = async (user, name = "", phone = "") => {
       [user, options.config.default.user.balance, now, name, phone]
     );
 
-    return rows[0];
+    return rows[0] || false;
   } catch (err) {
     console.error(err);
     return false;
@@ -45,10 +47,36 @@ const get = async user => {
       [user]
     );
 
+    if (!rows.length) {
+      const info = await jeffrey.getUser(user);
+
+      if (!info) {
+        return false;
+      }
+
+      return await create(user, info.name, info.phone);
+    }
+
     return rows[0] || false;
   } catch (err) {
     console.error(err);
     return false;
+  }
+};
+
+/**
+ * Get all users
+ * @return {array} - all users
+ */
+const getAll = async () => {
+  try {
+    const { rows } = await db.query(
+      "SELECT uid, balance, total, name, phone, creation FROM users"
+    );
+    return rows;
+  } catch (err) {
+    console.error(err);
+    return [];
   }
 };
 
@@ -72,10 +100,41 @@ const update = async user => {
 };
 
 /**
+ * Get an updated user
+ * @param {string} user - user id
+ * @return {boolean|object} - updated user object or false if error
+ */
+const getUpdated = async user => {
+  try {
+    const info = await jeffrey.getUser(user);
+
+    if (!info) {
+      return false;
+    }
+
+    const { rows } = await db.query(
+      "UPDATE users SET name = $1, phone = $2 WHERE uid = $3 RETURNING uid, balance, total, creation, name, phone",
+      [info.name, info.phone, user]
+    );
+
+    if (!rows.length) {
+      return await create(user, info.name, info.phone);
+    }
+
+    return rows[0] || false;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
+/**
  * Export
  */
 module.exports = {
   create,
   get,
-  update
+  getAll,
+  update,
+  getUpdated
 };

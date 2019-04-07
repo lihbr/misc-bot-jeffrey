@@ -84,6 +84,9 @@ exports.add = async event => {
           {
             textKey: key,
             data: warnData
+          },
+          {
+            key: "refillNow"
           }
         ]
       });
@@ -99,77 +102,72 @@ exports.add = async event => {
  * Stats
  */
 exports.stats = async (event, data) => {
-  const [channel, orders] = await Promise.all([
+  let [channel, orders, author, users] = await Promise.all([
     jeffrey.getDMChannel(event.user),
-    order.getAll()
+    order.getAll(),
+    order.getAllFromUser(event.user),
+    user.getAll()
   ]);
 
-  const blocks = [{ textKey: "statsIntro" }, { key: "divider" }];
+  const blocks = [{ textKey: "statsIntro" }];
 
-  if (orders.length) {
+  const success = orders.length && author.length && users.length;
+
+  if (success) {
+    blocks.push({ key: "divider" });
+
     const block = {
       key: "statsDetails",
       data: {}
     };
 
-    // Create global and users object
+    orders = get.ordersObject(orders);
+    author = get.ordersObject(author);
+
     const global = { total: 0 };
-    let users = {};
     for (const key in options.config.orders) {
       if (options.config.orders.hasOwnProperty(key)) {
         global[key] = 0;
       }
     }
-    for (const order of orders) {
-      order.total = parseInt(order.total);
-      const { uid, type, total, name } = order;
 
-      if (!users[uid]) {
-        users[uid] = {
-          name,
-          uid,
-          total: 0
-        };
-        for (const key in options.config.orders) {
-          if (options.config.orders.hasOwnProperty(key)) {
-            users[uid][key] = 0;
-          }
+    for (const user of users) {
+      user.total = JSON.parse(user.total);
+      user.total.total = 0;
+      for (const key in options.config.orders) {
+        if (options.config.orders.hasOwnProperty(key)) {
+          const amount = user.total[key] || 0;
+          user.total.total += amount;
+          global[key] += amount;
+          global.total += amount;
         }
       }
-
-      users[uid][type] += total;
-      users[uid].total += total;
-      global[type] += total;
-      global.total += total;
     }
-    // Get author
-    const author = users[event.user];
 
-    // Convert users to array
-    const temp = [];
-    for (const uid in users) {
-      if (users.hasOwnProperty(uid)) {
-        temp.push(users[uid]);
-      }
-    }
-    users = temp;
+    const usersOrders = users.map(i => ({
+      ...i.total,
+      name: i.name,
+      uid: i.uid
+    }));
 
     block.data = {
-      g_total: global.total,
-      g_detail: get.detail(global),
+      g_total: orders.total,
+      g_detail: get.detail(orders),
+      g_total_overall: global.total,
+      g_detail_overall: get.detail(global),
       u_total: author.total,
-      u_detail: get.detail(author)
+      u_detail: get.detail(author),
+      u_total_overall: usersOrders.find(i => i.uid === event.user).total,
+      u_detail_overall: get.detail(usersOrders.find(i => i.uid === event.user))
     };
 
     blocks.push(block);
-
     blocks.push({ key: "divider" });
-
-    blocks.push({ textKey: "statsMonthTop" });
+    blocks.push({ textKey: "statsTop" });
 
     let fields = [
       get.top({
-        users,
+        users: usersOrders,
         key: "total",
         intro: "*:dancer: Overall:*",
         limit: 5
@@ -180,7 +178,7 @@ exports.stats = async (event, data) => {
       if (options.config.orders.hasOwnProperty(key)) {
         fields.push(
           get.top({
-            users,
+            users: usersOrders,
             key,
             intro: `*${options.config.orders[key].emoji} ${string.ucFirst(
               key
@@ -211,10 +209,10 @@ exports.stats = async (event, data) => {
     channel: data === "dm" ? "dm" : event.channel,
     user: event.user,
     blocks,
-    error: !orders.length
+    error: !success
   });
 
   const callback = data === "dm" ? await jeffrey.checkDM(event, channel) : true;
 
-  return !!orders.length;
+  return success;
 };
