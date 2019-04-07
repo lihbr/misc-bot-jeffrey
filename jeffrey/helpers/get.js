@@ -144,7 +144,7 @@ const detail = obj => {
  * @return {object} - field
  */
 const top = ({ users, key, intro = "", outro = "", limit = 5 } = {}) => {
-  const sorted = users.sort((a, b) => a[key] < b[key]);
+  const sorted = users.filter(i => i[key]).sort((a, b) => a[key] < b[key]);
   const t = intro ? [intro] : [];
 
   for (let i = 0; i < sorted.length && i < limit; i++) {
