@@ -91,8 +91,6 @@ exports.help = async event => {
 exports.updateUser = async event => {
   const author = await user.getUpdated(event.user);
 
-  console.log(author);
-
   const [result, callback] = await Promise.all([
     jeffrey.say({
       channel: event.channel,
