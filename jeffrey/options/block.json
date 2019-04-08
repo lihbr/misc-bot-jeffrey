@@ -65,6 +65,14 @@
           {
             "text": {
               "type": "plain_text",
+              "text": "A nesquik! :nesquik:",
+              "emoji": true
+            },
+            "value": "addOrder_:nesquik:"
+          },
+          {
+            "text": {
+              "type": "plain_text",
               "text": "A tea! :tea:",
               "emoji": true
             },
