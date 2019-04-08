@@ -57,6 +57,14 @@
           {
             "text": {
               "type": "plain_text",
+              "text": "A capuccino! :capuccino:",
+              "emoji": true
+            },
+            "value": "addOrder_:capuccino:"
+          },
+          {
+            "text": {
+              "type": "plain_text",
               "text": "A chocolate! :chocolate_bar:",
               "emoji": true
             },

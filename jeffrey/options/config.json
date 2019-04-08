@@ -4,6 +4,10 @@
       "emoji": ":coffee:",
       "value": 1
     },
+    "capuccino": {
+      "emoji": ":capuccino:",
+      "value": 2
+    },
     "chocolate": {
       "emoji": ":chocolate_bar:",
       "value": 2
