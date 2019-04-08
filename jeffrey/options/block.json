@@ -57,10 +57,10 @@
           {
             "text": {
               "type": "plain_text",
-              "text": "A capuccino! :capuccino:",
+              "text": "A cappuccino! :cappuccino:",
               "emoji": true
             },
-            "value": "addOrder_:capuccino:"
+            "value": "addOrder_:cappuccino:"
           },
           {
             "text": {
