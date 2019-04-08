@@ -172,7 +172,7 @@ exports.stats = async (event, data) => {
         users: usersOrders,
         key: "total",
         intro: "*:dancer: Overall:*",
-        limit: 5
+        limit: 3
       })
     ];
     let count = 1;
@@ -185,7 +185,7 @@ exports.stats = async (event, data) => {
             intro: `*${options.config.orders[key].emoji} ${string.ucFirst(
               key
             )}:*`,
-            limit: 5
+            limit: 3
           })
         );
         if (++count === 2) {
