@@ -123,11 +123,13 @@ const detail = obj => {
   for (const key in options.config.orders) {
     if (options.config.orders.hasOwnProperty(key)) {
       const el = obj[key] || 0;
-      d.push(
-        `- ${options.config.orders[key].emoji} ${key}${
-          el > 1 ? "s" : ""
-        } \`${el}\``
-      );
+      if (el) {
+        d.push(
+          `- ${options.config.orders[key].emoji} ${key}${
+            el > 1 ? "s" : ""
+          } \`${el}\``
+        );
+      }
     }
   }
 
