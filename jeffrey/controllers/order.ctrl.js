@@ -228,13 +228,12 @@ exports.cancel = async (event, data) => {
     user.get(event.user)
   ]);
 
-  const block = { textKey: "orderCancelled" };
+  const block = { textKey: "orderCancelled", data: {} };
 
   let success = orders.status !== 500 && !!author;
 
   if (success) {
-    console.log(orders);
-    if (order.status === 404) {
+    if (orders.status === 404) {
       block.textKey = "orderCancelledNotFound";
     } else {
       author.total = JSON.parse(author.total);
@@ -252,7 +251,7 @@ exports.cancel = async (event, data) => {
       success = !!updatedUser;
 
       if (success) {
-        block.data = { balance: updatedUser.balance };
+        block.data.balance = updatedUser.balance;
       }
     }
   }
