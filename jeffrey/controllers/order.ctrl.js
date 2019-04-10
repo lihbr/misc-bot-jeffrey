@@ -233,7 +233,7 @@ exports.cancel = async (event, data) => {
   let success = orders.status !== 500 && !!author;
 
   if (success) {
-    console.log(order);
+    console.log(orders);
     if (order.status === 404) {
       block.textKey = "orderCancelledNotFound";
     } else {
