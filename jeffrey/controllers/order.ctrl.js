@@ -251,7 +251,7 @@ exports.cancel = async (event, data) => {
       success = !!updatedUser;
 
       if (success) {
-        block.data = updatedUser.balance;
+        block.data = { balance: updatedUser.balance };
       }
     }
   }
