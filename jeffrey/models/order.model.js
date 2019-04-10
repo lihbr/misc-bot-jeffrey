@@ -138,6 +138,7 @@ const getLastFromUser = async (user, limit = 1000 * 60 * 60 * 24) => {
       WHERE rn = 1 AND time > $2`,
       [user, Date.now() - limit]
     );
+    console.log(rows.length);
     return { status: rows.length ? 200 : 404, rows };
   } catch (err) {
     console.error(err);
