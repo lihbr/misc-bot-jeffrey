@@ -222,7 +222,7 @@ exports.stats = async (event, data) => {
 /**
  * Cancel
  */
-exports.stats = async (event, data) => {
+exports.cancel = async (event, data) => {
   let [orders, author] = await Promise.all([
     order.getLastFromUser(event.user),
     user.get(event.user)
