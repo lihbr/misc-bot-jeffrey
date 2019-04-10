@@ -218,3 +218,51 @@ exports.stats = async (event, data) => {
 
   return success;
 };
+
+/**
+ * Cancel
+ */
+exports.stats = async (event, data) => {
+  let [orders, author] = await Promise.all([
+    order.getLastFromUser(event.user),
+    user.get(event.user)
+  ]);
+
+  const block = { textKey: "orderCancelled" };
+
+  let success = orders.status !== 500 && !!author;
+
+  if (success) {
+    if (order.status === 404) {
+      block.textKey = "orderCancelledNotFound";
+    } else {
+      author.total = JSON.parse(author.total);
+      for (const order of orders.rows) {
+        author.total[order.type] -= order.amount;
+        author.balance += order.value;
+      }
+      author.total = JSON.stringify(author.total);
+
+      const [updatedUser, updatedOrder] = await Promise.all([
+        user.update(author),
+        order.delFromUser(author.uid, orders.rows[0].time)
+      ]);
+
+      success = !!updatedUser;
+
+      if (success) {
+        block.data = updatedUser.balance;
+      }
+    }
+  }
+
+  const result = await jeffrey.say({
+    url: event.response_url,
+    channel: event.channel,
+    user: event.user,
+    blocks: [block],
+    error: !success
+  });
+
+  return success;
+};
