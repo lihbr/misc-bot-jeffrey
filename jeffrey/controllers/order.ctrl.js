@@ -36,7 +36,9 @@ exports.add = async event => {
     if (author) {
       author.total = JSON.parse(author.total);
 
-      const defaultBalance = author.balance;
+      const defaultBalance = Math.floor(
+        author.balance / options.config.default.refill.amount
+      );
 
       for (const type of raw.types) {
         author.total[type] = author.total[type]
@@ -46,9 +48,10 @@ exports.add = async event => {
         author.balance += raw[type] * options.config.orders[type].value;
       }
 
-      diff = Math.floor(
-        (author.balance - defaultBalance) / options.config.default.refill.amount
-      );
+      diff =
+        Math.floor(author.balance / options.config.default.refill.amount) -
+        defaultBalance;
+
       balance =
         options.config.default.refill.amount -
         (author.balance % options.config.default.refill.amount);
@@ -88,10 +91,19 @@ exports.add = async event => {
         ]
       });
     }
+    console.log(diff);
 
     if (diff > 0) {
-      console.log("must refill", diff);
-
+      const data = {
+        user: event.user,
+        amount: diff,
+        plural: diff > 1 ? "s" : "",
+        cost: (
+          diff *
+          options.config.default.refill.amount *
+          options.config.default.refill.value
+        ).toFixed(2)
+      };
       // Notify admins
       for (const key in options.config.admins) {
         if (options.config.admins.hasOwnProperty(key)) {
@@ -102,15 +114,7 @@ exports.add = async event => {
             blocks: [
               {
                 textKey: "userMustRefill",
-                data: {
-                  user: event.user,
-                  amount: diff,
-                  plural: amount > 1 ? "s" : "",
-                  cost:
-                    diff *
-                    options.config.default.refill *
-                    options.config.default.value
-                }
+                data
               }
             ]
           });
@@ -121,10 +125,12 @@ exports.add = async event => {
         channel: "dm",
         user: event.user,
         blocks: [
-          {
-            textKey: key,
-            data: warnData
-          }
+          { textKey: "refillInfo", data },
+          { key: "divider" },
+          { textKey: "refillHowTo" },
+          { key: "refillHowTo1", data },
+          { key: "refillHowTo2", data },
+          { key: "refillHowTo3", data }
         ]
       });
     }
@@ -276,7 +282,7 @@ exports.cancel = async (event, data) => {
       author.total = JSON.parse(author.total);
       for (const order of orders.rows) {
         author.total[order.type] -= order.amount;
-        author.balance += order.value;
+        author.balance -= order.value;
       }
       author.total = JSON.stringify(author.total);
 
@@ -288,7 +294,9 @@ exports.cancel = async (event, data) => {
       success = !!updatedUser;
 
       if (success) {
-        block.data.balance = updatedUser.balance;
+        block.data.balance =
+          options.config.default.refill.amount -
+          (updatedUser.balance % options.config.default.refill.amount);
       }
     }
   }

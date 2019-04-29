@@ -163,5 +163,45 @@
         "value": "refill"
       }
     ]
+  },
+  "refillHowTo1": {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*1.* Open the Lydia App on your phone"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*2.* Enter the amount you owe: *#cost# €*, then hit the *Pay* button"
+      }
+    ],
+    "__inserts": ["fields[1].text"]
+  },
+  "refillHowTo2": {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*3.* Tap your super secret pin"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*4.* When choosing a recipient go to the *Accounts* tab, then select *Synerg'hetic*"
+      }
+    ]
+  },
+  "refillHowTo3": {
+    "type": "section",
+    "fields": [
+      {
+        "type": "mrkdwn",
+        "text": "*5.* Enter a meaningful note about your payment then click the *Confirm payment* button"
+      },
+      {
+        "type": "mrkdwn",
+        "text": "*6.* Here you go! :clap: You can now get back to drinking~"
+      }
+    ]
   }
 }

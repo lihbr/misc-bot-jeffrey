@@ -23,8 +23,10 @@
   "refillConfirm": "Alright nice! I just sent a payment request through Lydia asking for *#cost# €* at your phone number: `#phone#`. It'll add *#amount#* to your current balance if you accept it~",
   "refillNoNumber": "Oops! It appears that you don't have a phone number set in your Slack profile. Please add one first and then try again~",
   "refillSuccess": "Yay, just received your payment of *#cost# €*! Your balance is now at *#balance#*~ :money_mouth_face:",
+  "refillInfo": "Hey! It's time for you to refill for some coffee (or whatever you're into) :money_mouth_face:.\nYou actualy owe the community *#amount#* pack#plural# of drinks, so please send *#cost# €* to the Synerg'hetic's Lydia shared account to regularize your situation~",
+  "refillHowTo": "Not sure of how to do so? Don't worry I'll guide you through the process! :wink:",
   "updateUser": "It's nice and fresh! Your name and phone has been updated with success~",
-  "userMustRefill": "<@#user#> owes Synerg'hetic *#amount#* pack#plural# of coffee! He should send *#cost# €* to the Lydia account~",
+  "userMustRefill": "<@#user#> owes Synerg'hetic *#amount#* pack#plural# of coffee! She/He should send soon *#cost# €* to the Lydia account~",
   "orderCancelled": "Your last order got cancelled successfully. You balance stands now at *#balance#*. :sparkles:",
   "orderCancelledNotFound": "Oops, it appears that you don't have any recent order to cancel. :shrug:",
   "error": {
