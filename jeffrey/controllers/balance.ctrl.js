@@ -29,22 +29,24 @@ exports.check = async event => {
   const success = author && channel;
 
   if (success) {
+    const balance =
+      options.config.default.refill.amount -
+      (author.balance % options.config.default.refill.amount);
     blocks[0].data = {
-      balance: author.balance,
-      plural: author.balance > 1 ? "s" : ""
+      balance: balance,
+      plural: balance > 1 ? "s" : ""
     };
 
-    if (author.balance <= options.config.balance.warnAt) {
-      console.log("oui");
+    if (balance <= options.config.balance.warnAt) {
       blocks[0].textKey = "warnBalanceLow";
 
-      if (author.balance <= 0) {
-        blocks[0].textKey = "warnBalanceNull";
-      }
+      // if (author.balance <= 0) {
+      //   blocks[0].textKey = "warnBalanceNull";
+      // }
 
-      blocks.push({ key: "refillNow" });
+      // blocks.push({ key: "refillNow" });
     } else {
-      blocks.push({ key: "refillAnyway" });
+      // blocks.push({ key: "refillAnyway" });
     }
   }
 

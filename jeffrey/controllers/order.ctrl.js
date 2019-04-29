@@ -22,7 +22,7 @@ const options = require("../options");
 exports.add = async event => {
   const { raw, rows } = await order.add(event.text, event.user);
 
-  let author;
+  let author, diff, balance;
   if (!!rows) {
     author = await user.get(event.user);
 
@@ -36,13 +36,22 @@ exports.add = async event => {
     if (author) {
       author.total = JSON.parse(author.total);
 
+      const defaultBalance = author.balance;
+
       for (const type of raw.types) {
         author.total[type] = author.total[type]
           ? author.total[type] + raw[type]
           : raw[type];
 
-        author.balance -= raw[type] * options.config.orders[type].value;
+        author.balance += raw[type] * options.config.orders[type].value;
       }
+
+      diff = Math.floor(
+        (author.balance - defaultBalance) / options.config.default.refill.amount
+      );
+      balance =
+        options.config.default.refill.amount -
+        (author.balance % options.config.default.refill.amount);
 
       author.total = JSON.stringify(author.total);
 
@@ -64,29 +73,57 @@ exports.add = async event => {
   });
 
   if (!(!rows || !author)) {
-    let key = "";
-    if (author.balance <= 0) {
-      key = "warnBalanceNull";
-    } else if (author.balance <= options.config.balance.warnAt) {
-      key = "warnBalanceLow";
+    if (balance <= options.config.balance.warnAt) {
+      const balanceWarn = jeffrey.say({
+        channel: "dm",
+        user: event.user,
+        blocks: [
+          {
+            textKey: "autoWarnBalanceLow",
+            data: {
+              balance: balance,
+              plural: balance > 1 ? "s" : ""
+            }
+          }
+        ]
+      });
     }
 
-    if (key) {
-      const warnData = {
-        balance: author.balance,
-        plural: author.balance > 1 ? "s" : ""
-      };
+    if (diff > 0) {
+      console.log("must refill", diff);
 
-      const warn = await jeffrey.say({
+      // Notify admins
+      for (const key in options.config.admins) {
+        if (options.config.admins.hasOwnProperty(key)) {
+          const admin = options.config.admins[key];
+          jeffrey.say({
+            channel: "dm",
+            user: admin,
+            blocks: [
+              {
+                textKey: "userMustRefill",
+                data: {
+                  user: event.user,
+                  amount: diff,
+                  plural: amount > 1 ? "s" : "",
+                  cost:
+                    diff *
+                    options.config.default.refill *
+                    options.config.default.value
+                }
+              }
+            ]
+          });
+        }
+      }
+
+      const lydiaWarn = await jeffrey.say({
         channel: "dm",
         user: event.user,
         blocks: [
           {
             textKey: key,
             data: warnData
-          },
-          {
-            key: "refillNow"
           }
         ]
       });

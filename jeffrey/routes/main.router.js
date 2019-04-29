@@ -28,15 +28,15 @@ class MainRouterClass extends Router {
     this.use("block_actions", "stats", orderController.stats);
     this.use("block_actions", "balance", balanceController.check);
     this.use("block_actions", "addOrder", orderController.add);
-    this.use("block_actions", "refill", balanceController.refill);
+    // this.use("block_actions", "refill", balanceController.refill);
 
     this.use("command", "jeffreyhelp", messageController.help);
     this.use("command", "jeffreystats", orderController.stats, "dm");
     this.use("command", "jeffreybalance", balanceController.check);
-    this.use("command", "jeffreyrefill", balanceController.refill);
+    // this.use("command", "jeffreyrefill", balanceController.refill);
     this.use("command", "jeffreyupdate", messageController.updateUser);
 
-    this.use("lydia", "payment", balanceController.payment);
+    // this.use("lydia", "payment", balanceController.payment);
   }
 }
 

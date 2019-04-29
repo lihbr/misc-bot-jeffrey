@@ -15,7 +15,7 @@
   },
   "default": {
     "user": {
-      "balance": 16
+      "balance": 0
     },
     "refill": {
       "amount": 16,
@@ -23,6 +23,10 @@
     }
   },
   "balance": {
-    "warnAt": 3
+    "warnAt": 2
+  },
+  "admins": {
+    "edhbr": "UH4T1SX52",
+    "edouard": "UFNU9AMKR"
   }
 }
