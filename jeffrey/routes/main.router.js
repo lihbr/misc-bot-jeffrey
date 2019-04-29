@@ -35,6 +35,7 @@ class MainRouterClass extends Router {
     this.use("command", "jeffreybalance", balanceController.check);
     // this.use("command", "jeffreyrefill", balanceController.refill);
     this.use("command", "jeffreyupdate", messageController.updateUser);
+    this.use("command", "jeffreycancel", orderController.cancel);
 
     // this.use("lydia", "payment", balanceController.payment);
   }

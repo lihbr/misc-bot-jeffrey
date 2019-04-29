@@ -57,10 +57,26 @@
           {
             "text": {
               "type": "plain_text",
+              "text": "A cappuccino! :cappuccino:",
+              "emoji": true
+            },
+            "value": "addOrder_:cappuccino:"
+          },
+          {
+            "text": {
+              "type": "plain_text",
               "text": "A chocolate! :chocolate_bar:",
               "emoji": true
             },
             "value": "addOrder_:chocolate_bar:"
+          },
+          {
+            "text": {
+              "type": "plain_text",
+              "text": "A nesquik! :nesquik:",
+              "emoji": true
+            },
+            "value": "addOrder_:nesquik:"
           },
           {
             "text": {

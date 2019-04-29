@@ -209,7 +209,7 @@ exports.stats = async (event, data) => {
         users: usersOrders,
         key: "total",
         intro: "*:dancer: Overall:*",
-        limit: 5
+        limit: 3
       })
     ];
     let count = 1;
@@ -222,7 +222,7 @@ exports.stats = async (event, data) => {
             intro: `*${options.config.orders[key].emoji} ${string.ucFirst(
               key
             )}:*`,
-            limit: 5
+            limit: 3
           })
         );
         if (++count === 2) {
@@ -252,6 +252,54 @@ exports.stats = async (event, data) => {
   });
 
   const callback = data === "dm" ? await jeffrey.checkDM(event, channel) : true;
+
+  return success;
+};
+
+/**
+ * Cancel
+ */
+exports.cancel = async (event, data) => {
+  let [orders, author] = await Promise.all([
+    order.getLastFromUser(event.user),
+    user.get(event.user)
+  ]);
+
+  const block = { textKey: "orderCancelled", data: {} };
+
+  let success = orders.status !== 500 && !!author;
+
+  if (success) {
+    if (orders.status === 404) {
+      block.textKey = "orderCancelledNotFound";
+    } else {
+      author.total = JSON.parse(author.total);
+      for (const order of orders.rows) {
+        author.total[order.type] -= order.amount;
+        author.balance += order.value;
+      }
+      author.total = JSON.stringify(author.total);
+
+      const [updatedUser, updatedOrder] = await Promise.all([
+        user.update(author),
+        order.delFromUser(author.uid, orders.rows[0].time)
+      ]);
+
+      success = !!updatedUser;
+
+      if (success) {
+        block.data.balance = updatedUser.balance;
+      }
+    }
+  }
+
+  const result = await jeffrey.say({
+    url: event.response_url,
+    channel: event.channel,
+    user: event.user,
+    blocks: [block],
+    error: !success
+  });
 
   return success;
 };

@@ -120,6 +120,51 @@ const getAllFromUser = async user => {
 };
 
 /**
+ * Get last order given a time range
+ * @param {string} user - user id
+ * @param {integer} limit - last order limit, default 24 hours
+ * @return {object} - all orders
+ */
+const getLastFromUser = async (user, limit = 1000 * 60 * 60 * 24) => {
+  try {
+    const { rows } = await db.query(
+      `WITH lastOrder AS (
+        SELECT uid, type, amount, value, time, RANK() OVER (partition by uid order by uid, time desc) rn
+        FROM orders
+        WHERE uid = $1
+      )
+      SELECT uid, type, amount, value, time
+      FROM lastOrder
+      WHERE rn = 1 AND time > $2`,
+      [user, Date.now() - limit]
+    );
+    return { status: rows.length ? 200 : 404, rows };
+  } catch (err) {
+    console.error(err);
+    return { status: 500 };
+  }
+};
+
+/**
+ * Del order from user
+ * @param {string} user - user id
+ * @param {integer} time - order time
+ * @return {integer} - number of row deleted
+ */
+const delFromUser = async (user, time) => {
+  try {
+    const result = await db.query(
+      "DELETE FROM orders WHERE uid = $1 AND time = $2",
+      [user, time]
+    );
+    return result.rowCount;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
+/**
  * Prune orders older than 30 days once a day
  * @return {integer} - number of row deleted
  */
@@ -158,5 +203,7 @@ module.exports = {
   getFromMsg,
   getAll,
   getAllFromUser,
+  getLastFromUser,
+  delFromUser,
   prune
 };

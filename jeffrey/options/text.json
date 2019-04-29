@@ -2,7 +2,9 @@
   "test": "1, 2, 1, 2, this is a test!",
   "addOrder_1": "*#num_1#* #type_1##plural_1# for @author!",
   "addOrder_2": "*#num_1#* #type_1##plural_1# and *#num_2#* #type_2##plural_2# for @author!",
-  "addOrder_3": "*#num_1#* #type_1##plural_1#, *#num_2#* #type_2##plural_2# and *#num_3#* #type_3##plural_3# for @author. That's a lot!",
+  "addOrder_3": "*#num_1#* #type_1##plural_1#, *#num_2#* #type_2##plural_2# and *#num_3#* #type_3##plural_3# for @author. Hot, hot!",
+  "addOrder_4": "*#num_1#* #type_1##plural_1#, *#num_2#* #type_2##plural_2#, *#num_3#* #type_3##plural_3# and *#num_4#* #type_4##plural_4# for @author. That's a lot!",
+  "addOrder_5": "*#num_1#* #type_1##plural_1#, *#num_2#* #type_2##plural_2#, *#num_3#* #type_3##plural_3#, *#num_4#* #type_4##plural_4# and *#num_5#* #type_5##plural_5# for @author. Oh my...",
   "appMention_1": "What can I do for you Sir?",
   "appMention_2": "Here we roll~",
   "appMention_3": "Someone said Jeffrey?",
@@ -11,7 +13,7 @@
   "helpIntro": "I'm here to help your team keep track of its coffee and other beverages consumption.\nHere's how I work:",
   "helpOrder": "*Adding Orders*\nYou can add an order by telling any of the following in a channel I'm in.\nThe more you tell, the more I'll add, be aware that :warning: _order value may vary_ :warning:!\n\n#orderTypes#",
   "helpMention": "*Mention*\nYou can mention me in channel I'm in: `@jeffrey`.\nI'll help you get straight to what you're looking for! :sunglasses:",
-  "helpCommands": "*Commands*\nFor old school boys and gals I still have commands you can use :nerd_face::\n\n- `/jeffreyhelp` give you this\n- `/jeffreystats` show you stats of your team\n- `/jeffreybalance` show you your balance\n- `/jeffreyrefill <amount?>` refill your balance\n- `/jeffreyupdate` force the update of your profile",
+  "helpCommands": "*Commands*\nFor old school boys and gals I still have commands you can use :nerd_face::\n\n- `/jeffreyhelp` give you this\n- `/jeffreystats` show you stats of your team\n- `/jeffreybalance` show you your balance\n- `/jeffreyrefill <amount?>` refill your balance\n- `/jeffreycancel` cancel your last recent order\n- `/jeffreyupdate` force the update of your profile",
   "statsIntro": "Here's your team's report about coffee, tea and everything. Enjoy!",
   "statsTop": "*Top drinkers of my team*",
   "balanceOk": "Everything's fine, your balance is at *#balance#*, enough for quite some coffees or whatever floats your boat... :sailboat:",
@@ -23,13 +25,18 @@
   "refillSuccess": "Yay, just received your payment of *#cost# €*! Your balance is now at *#balance#*~ :money_mouth_face:",
   "updateUser": "It's nice and fresh! Your name and phone has been updated with success~",
   "userMustRefill": "<@#user#> owes Synerg'hetic *#amount#* pack#plural# of coffee! He should send *#cost# €* to the Lydia account~",
+  "orderCancelled": "Your last order got cancelled successfully. You balance stands now at *#balance#*. :sparkles:",
+  "orderCancelledNotFound": "Oops, it appears that you don't have any recent order to cancel. :shrug:",
   "error": {
     "addOrder_1": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_1` error)",
     "addOrder_2": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_2` error)",
     "addOrder_3": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_3` error)",
+    "addOrder_4": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_4` error)",
+    "addOrder_5": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_5` error)",
     "statsIntro": "Ouch... I lost the receipts! :anguished:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `stats` error)",
     "balanceOk": "Never been good at maths... :disappointed_relieved:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `balanceOk` error)",
     "refillConfirm": "Argh... could not find my wallet! :credit_card:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `refillConfirm` error)",
-    "updateUser": "Damn, my records are messy! :books:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `updateUser` error)"
+    "updateUser": "Damn, my records are messy! :books:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `updateUser` error)",
+    "orderCancelled": "Don't know ya sir!\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `orderCancelled` error)"
   }
 }

@@ -4,9 +4,17 @@
       "emoji": ":coffee:",
       "value": 1
     },
+    "cappuccino": {
+      "emoji": ":cappuccino:",
+      "value": 2
+    },
     "chocolate": {
       "emoji": ":chocolate_bar:",
       "value": 2
+    },
+    "nesquik": {
+      "emoji": ":nesquik:",
+      "value": 1
     },
     "tea": {
       "emoji": ":tea:",
