@@ -30,15 +30,15 @@
   "orderCancelled": "Your last order got cancelled successfully. You balance stands now at *#balance#*. :sparkles:",
   "orderCancelledNotFound": "Oops, it appears that you don't have any recent order to cancel. :shrug:",
   "error": {
-    "addOrder_1": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_1` error)",
-    "addOrder_2": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_2` error)",
-    "addOrder_3": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_3` error)",
-    "addOrder_4": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_4` error)",
-    "addOrder_5": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `addOrder_5` error)",
-    "statsIntro": "Ouch... I lost the receipts! :anguished:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `stats` error)",
-    "balanceOk": "Never been good at maths... :disappointed_relieved:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `balanceOk` error)",
-    "refillConfirm": "Argh... could not find my wallet! :credit_card:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `refillConfirm` error)",
-    "updateUser": "Damn, my records are messy! :books:\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `updateUser` error)",
-    "orderCancelled": "Don't know ya sir!\n(yell at <https://twitter.com/ed_hbr|@edhbr>, `orderCancelled` error)"
+    "addOrder_1": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/li_hbr|@lihbr>, `addOrder_1` error)",
+    "addOrder_2": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/li_hbr|@lihbr>, `addOrder_2` error)",
+    "addOrder_3": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/li_hbr|@lihbr>, `addOrder_3` error)",
+    "addOrder_4": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/li_hbr|@lihbr>, `addOrder_4` error)",
+    "addOrder_5": "*slirp* Sht! Now there's #type_1# everywhere...\n(yell at <https://twitter.com/li_hbr|@lihbr>, `addOrder_5` error)",
+    "statsIntro": "Ouch... I lost the receipts! :anguished:\n(yell at <https://twitter.com/li_hbr|@lihbr>, `stats` error)",
+    "balanceOk": "Never been good at maths... :disappointed_relieved:\n(yell at <https://twitter.com/li_hbr|@lihbr>, `balanceOk` error)",
+    "refillConfirm": "Argh... could not find my wallet! :credit_card:\n(yell at <https://twitter.com/li_hbr|@lihbr>, `refillConfirm` error)",
+    "updateUser": "Damn, my records are messy! :books:\n(yell at <https://twitter.com/li_hbr|@lihbr>, `updateUser` error)",
+    "orderCancelled": "Don't know ya sir!\n(yell at <https://twitter.com/li_hbr|@lihbr>, `orderCancelled` error)"
   }
 }
