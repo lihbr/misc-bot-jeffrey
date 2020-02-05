@@ -27,15 +27,15 @@
     },
     "refill": {
       "amount": 16,
-      "value": 0.2875
+      "value": 0.3125
     }
   },
   "balance": {
     "warnAt": 2
   },
   "admins": {
-    "edhbr": "UH4T1SX52",
-    "edouard": "UFNU9AMKR",
+    "lihbr": "UH4T1SX52",
+    "lucie": "UFNU9AMKR",
     "martin": "UFMA5EC1X"
   }
 }
